@@ -5,36 +5,37 @@ import json
 import os
 import threading
 import time
-from websocket import create_connection
 
 
-class GameLoop(tornado.websocket.WebSocketHandler):
-	def open(self):
-		print("WebSocket opened")
-
-	def on_message(self, message):
-		message = json.loads(message)
-		print(message)
-		self.write_message(u"You said asd")
-
-	def on_close(self):
-		print("WebSocket closed")
-
-def make_app():
-	return tornado.web.Application([
-		(r"/", GameLoop),
-
-	])
-
-def main():
-	app = make_app()
-
-	http_server = tornado.httpserver.HTTPServer(app
-	)
-
-	http_server.listen(4000)
-	tornado.ioloop.IOLoop.current().start()
 
 
-if __name__ == "__main__":
-	main()
+from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
+
+clients = []
+class GameServer(WebSocket):
+
+	def handleMessage(self):
+		data = self.data.decode("utf-8")
+		print(data)
+		self.sendMessage(self.data)
+		#for client in clients:
+		#	if client != self:
+		#		client.sendMessage(self.address[0] + u' - ' + self.data)
+
+	def handleConnected(self):
+		print(self.address, 'connected')
+		for client in clients:
+			client.sendMessage(self.address[0] + u' - connected')
+			clients.append(self)
+
+	def handleClose(self):
+		clients.remove(self)
+		print(self.address, 'closed')
+		#for client in clients:
+		#	client.sendMessage(self.address[0] + u' - disconnected')
+
+server = SimpleWebSocketServer('', 4000, GameServer)
+server.serveforever()
+
+
+
