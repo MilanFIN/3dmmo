@@ -1,41 +1,70 @@
-import tornado.ioloop
-import tornado.web
+#from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 import tornado.websocket
+import tornado.ioloop
 import json
-import os
-import threading
-import time
+import uuid
+
+from multiprocessing import Process, Queue
+
+from controller import *
+
+clients = {}
+messageInQue = Queue()
+messageOutQue = Queue()
+
+
+def updateClients():
+
+	for uid in clients:
+		clients[uid].write_message("asd")
+
+class MessageHandler(tornado.websocket.WebSocketHandler):
+
+	def check_origin(self, origin):
+		return True
+	def open(self):
+		self.uuid = uuid.uuid4()
+		clients[self.uuid] = self
+		
+	def on_message(self, message):
+		parsed_msg = json.loads(message)
+		if (type(parsed_msg) is not dict):
+			return
+		else:
+			parsed_msg["user"] = self.uuid
+			messageInQue.put(parsed_msg)
+		
+	def on_close(self):
+		clients.pop(self.uuid, None)
+
+def make_app():
+	return tornado.web.Application([
+		(r"/", MessageHandler),
+	])
+
+def main():
+	app = make_app()
+	http_server = tornado.httpserver.HTTPServer(app
+												#,
+												#ssl_options = {
+												#    "certfile": os.path.join("certs/domain-crt.txt"),
+												#    "keyfile": os.path.join("certs/domain-key.txt"),
+												#}
+	)
+	http_server.listen(4000)
+	
+	
+
+
+	controller = Process(target=startController, args=(messageInQue, messageOutQue))
+	controller.start()
 
 
 
+	updateTimer = tornado.ioloop.PeriodicCallback(updateClients, 1000, jitter=0)
+	updateTimer.start()
+	tornado.ioloop.IOLoop.current().start()
+	controller.join()
 
-from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
-
-clients = []
-class GameServer(WebSocket):
-
-	def handleMessage(self):
-		data = self.data.decode("utf-8")
-		print(data)
-		self.sendMessage(self.data)
-		#for client in clients:
-		#	if client != self:
-		#		client.sendMessage(self.address[0] + u' - ' + self.data)
-
-	def handleConnected(self):
-		print(self.address, 'connected')
-		for client in clients:
-			client.sendMessage(self.address[0] + u' - connected')
-			clients.append(self)
-
-	def handleClose(self):
-		clients.remove(self)
-		print(self.address, 'closed')
-		#for client in clients:
-		#	client.sendMessage(self.address[0] + u' - disconnected')
-
-server = SimpleWebSocketServer('', 4000, GameServer)
-server.serveforever()
-
-
-
+if __name__ == "__main__":
+	main()
