@@ -1,28 +1,50 @@
 from multiprocessing import Process, Queue
 from time import sleep
 
+from auth import *
+
+
 class Controller:
 	def __init__(self):
 		self.authorizedUsers = {}
 		self.unAuthUsers = {}
 		self.outBoundMessages = []
 
-	def newMessage(self, message):
-		print(message)
+		self.authInQue = Queue()
+		self.authOutQue = Queue()
 
+		self.auth = Process(target=startAuthService, args=(self.authInQue, self.authOutQue))
+		self.auth.start()
+
+
+	def newMessage(self, message):
 		if ("user" in message):
 			if (message["user"] in self.authorizedUsers):
 				pass
 				#user is logged in, can handle message as normal
 			elif (message["user"] not in self.unAuthUsers):
 
+				self.unAuthUsers[message["user"]] = 1
+				if (message["action"] == "login"):
+					self.authInQue.put(message)
 				#user has just connected, feed to login service
 				pass
 		pass
 		#figure out what keys it contains here
 		#key is uuid, if not in auth, then add to unauth
 		#if in auth, check action and shoot to comms or game sim
-	def getOutBoundMessages(self):
+	def tick(self):
+
+		roundCount = 0
+		while (roundCount < 200):
+			if (self.authOutQue.empty()):
+				break
+			roundCount += 1
+			message = self.authOutQue.get()
+			if (message["auth"] == "accepted"):
+				print("NEW LOGIN:")
+				print(message)
+
 		messages = []
 		messages.append({"uuid":"?", "stuff":"here"})
 		return messages#actually return outboundmessages
@@ -41,7 +63,7 @@ def startController(inQ, outQ):
 			messages += 1
 			idle = False
 
-		outbound = controller.getOutBoundMessages()
+		outbound = controller.tick()
 		if (len(outbound) != 0):
 			idle = False
 			for i in outbound:
