@@ -8,7 +8,6 @@ class Controller:
 	def __init__(self):
 		self.authorizedUsers = {}
 		self.unAuthUsers = {}
-		self.outBoundMessages = []
 
 		self.authInQue = Queue()
 		self.authOutQue = Queue()
@@ -34,6 +33,7 @@ class Controller:
 		#key is uuid, if not in auth, then add to unauth
 		#if in auth, check action and shoot to comms or game sim
 	def tick(self):
+		messages = []
 
 		roundCount = 0
 		while (roundCount < 200):
@@ -44,10 +44,10 @@ class Controller:
 			if (message["auth"] == "accepted"):
 				print("NEW LOGIN:")
 				print(message)
+				messages.append(message)
 
-		messages = []
-		messages.append({"uuid":"?", "stuff":"here"})
-		return messages#actually return outboundmessages
+
+		return messages
 
 
 def startController(inQ, outQ):
@@ -69,4 +69,4 @@ def startController(inQ, outQ):
 			for i in outbound:
 				outQ.put(i)
 		if (idle):
-			sleep(0.1)
+			sleep(0.05)

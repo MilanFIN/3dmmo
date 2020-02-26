@@ -15,8 +15,16 @@ messageOutQue = Queue()
 
 def updateClients():
 
-	for uid in clients:
-		clients[uid].write_message("asd")
+	while (not messageOutQue.empty()):
+		msg = messageOutQue.get()
+		if ("user" in msg):
+			if (msg["user"] in clients):
+				uid = msg["user"]
+				del msg["user"]
+				clients[uid].write_message(msg)
+
+	#for uid in clients:
+	#	clients[uid].write_message("asd")
 
 class MessageHandler(tornado.websocket.WebSocketHandler):
 
