@@ -45,6 +45,9 @@ class Controller:
 				print("NEW LOGIN:")
 				print(message)
 				messages.append(message)
+			elif (message["auth"] == "rejected"):
+				messages.append(message)
+
 
 
 		return messages
