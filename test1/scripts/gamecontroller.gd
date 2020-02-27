@@ -4,6 +4,8 @@ var address = 0
 var port = 0
 var ws
 var timer
+var loggedIn = false
+var outBoundMessage = {}
 
 func _ready():
 	address = global.address
@@ -23,7 +25,7 @@ func _ready():
 	
 	timer = Timer.new()
 	timer.connect("timeout",self,"_on_timer_timeout") 
-	timer.set_wait_time(0.5)
+	timer.set_wait_time(0.1)
 	
 	#timeout is what says in docs, in signals
 	#self is who respond to the callback
@@ -51,13 +53,19 @@ func _physics_process(delta):
 func _data_received(p_id = 1):
 	var packet = ws.get_peer(1).get_packet().get_string_from_utf8()
 	#print(str(peer_id))
-	print("got message")
-	print(parse_json(packet))
+	handleMessage(parse_json(packet))
+	
+	
 
 	
 func _on_timer_timeout():
-	
 	timer.start()
+	if (not outBoundMessage.empty()):
+		var message = JSON.print(outBoundMessage).to_ascii()
+		outBoundMessage = {}
+		
+	
+	"""
 	if (ws):
 		var node = get_node("./level/playership")
 		var x = node.translation.x
@@ -66,3 +74,15 @@ func _on_timer_timeout():
 		var d = {"x": x, "y":y, "state":state}
 		ws.get_peer(1).put_packet(JSON.print(d).to_ascii())
 		ws.poll()
+	"""
+
+
+func handleMessage(message):
+	pass
+	print(message)
+	
+	if (not loggedIn):
+		if ("auth" in message):
+			if (message["auth"] == "accepted"):
+				print("logged in")
+				loggedIn = true
