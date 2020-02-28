@@ -32,6 +32,12 @@ class MessageHandler(tornado.websocket.WebSocketHandler):
 		return True
 	def open(self):
 		self.uuid = uuid.uuid4()
+
+		while True:
+			if (self.uuid in clients):
+				self.uuid =  uuid.uuid4()
+			else:
+				break
 		clients[self.uuid] = self
 		
 	def on_message(self, message):

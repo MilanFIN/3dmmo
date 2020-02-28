@@ -6,8 +6,6 @@ from time import sleep
 
 class AuthService:
 	def __init__(self):
-		pass
-
 		self.OutBoundMessages = []
 	def newMessage(self, message):
 		#self.OutBoundMessages.append("user";)

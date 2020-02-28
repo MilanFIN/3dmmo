@@ -2,6 +2,7 @@ from multiprocessing import Process, Queue
 from time import sleep
 
 from auth import *
+from gamelogic import *
 
 
 class Controller:
@@ -14,6 +15,12 @@ class Controller:
 
 		self.auth = Process(target=startAuthService, args=(self.authInQue, self.authOutQue))
 		self.auth.start()
+
+		self.gameInQue = Queue()
+		self.gameOutQue = Queue()
+
+		self.game = Process(target=startGameLogic, args=(self.gameInQue, self.gameOutQue))
+		self.game.start()
 
 
 	def newMessage(self, message):
@@ -43,7 +50,8 @@ class Controller:
 			message = self.authOutQue.get()
 			if (message["auth"] == "accepted"):
 				print("NEW LOGIN:")
-				print(message)
+				#print(message)
+				self.gameInQue.put(message)
 				messages.append(message)
 			elif (message["auth"] == "rejected"):
 				messages.append(message)
