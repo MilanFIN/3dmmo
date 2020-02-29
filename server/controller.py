@@ -55,7 +55,7 @@ class Controller:
 			roundCount += 1
 			message = self.authOutQue.get()
 			if (message["auth"] == "accepted"):
-				print("NEW LOGIN:")
+				#print("NEW LOGIN:")
 				#print(message)
 				self.gameInQue.put(message)
 				messages.append(message)

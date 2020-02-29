@@ -6,6 +6,8 @@ var ws
 var timer
 var loggedIn = false
 var outBoundMessage = {}
+var username = global.username
+var otherPlayers = []
 
 func _ready():
 	address = global.address
@@ -37,7 +39,7 @@ func _ready():
 
 func _connection_established(protocol):
 	print("Connection established with protocol: ", protocol)
-	var d = {"action":"login","username":"1", "password":"1"}
+	var d = {"action":"login","username":global.username, "password":global.password}
 	ws.get_peer(1).put_packet(JSON.print(d).to_ascii())
 func _connection_closed():
 	print("Connection closed")
@@ -46,22 +48,24 @@ func _connection_error():
 	print("Connection error")
 
 func _physics_process(delta):
-	pass
 	if (ws):
 		pass
+	
+
 
 func _data_received(p_id = 1):
 	var packet = ws.get_peer(1).get_packet().get_string_from_utf8()
-	#print(str(peer_id))
+
 	handleMessage(parse_json(packet))
 	
 	
 
 	
 func _on_timer_timeout():
+	ws.poll()
 	timer.start()
 	if (not outBoundMessage.empty()):
-		var message = JSON.print(outBoundMessage).to_ascii()
+		var message = JSON.print(outBoundMessage).to_utf8()
 		outBoundMessage = {}
 		
 	
@@ -78,11 +82,44 @@ func _on_timer_timeout():
 
 
 func handleMessage(message):
-	pass
-	print(message)
-	
+
 	if (not loggedIn):
 		if ("auth" in message):
 			if (message["auth"] == "accepted"):
 				print("logged in")
 				loggedIn = true
+	else:
+		if ("data" in message):
+			var relevant = message["data"]
+
+			var otherRoot = get_node("./level/OtherPlayers")
+			var others = otherRoot.get_children()
+			var existingNames = []
+			for o in others:
+				existingNames.append(o.name)
+
+			#add nodes that have connected since last tick
+			for person in relevant:
+				if (person != username):
+					if (not person in existingNames):
+
+						var otherplayer = load("res://assets/otherplayer.tscn")
+						var other_instance = otherplayer.instance()
+						other_instance.set_name(person)
+						otherRoot.add_child(other_instance)
+						print("lisätään")
+			#remove nodes that have disconnected
+			for i in range(others.size() - 1, -1, -1):
+				if (not others[i].name in relevant):
+					otherRoot.remove_child(others[i])
+					print("poistetaan")
+			#update the info on children
+			others = otherRoot.get_children()
+			#handle stuff regarding other players
+			for other in others:
+				var name = other.name
+				var data = relevant[name]
+				print(name, data)
+			#handle the player themself
+			var playerData = relevant[username]
+			print(playerData)

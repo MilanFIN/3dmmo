@@ -13,7 +13,7 @@ class AuthService:
 		accepted = False
 		if ("action" in message):
 			if (message["action"] == "login" and "username" in message and "password" in message):
-				if (message["username"] not in self.loggedInUsers):
+				if (message["username"] not in self.loggedInUsers and message["username"] != "" and message["username"] != "level"):
 					accepted = True
 					response = {}
 					response["user"] = message["user"]

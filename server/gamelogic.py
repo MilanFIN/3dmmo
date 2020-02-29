@@ -27,11 +27,12 @@ class GameLogic():
 		for uid in self.accountMessages:
 			if (uid not in self.players):
 				if (self.accountMessages[uid]["auth"] == "accepted"):
-					print("creating a player")
+					#print("creating a player")
 					data = self.accountMessages[uid]["data"]
 					if ("username" in data):
 						player = Player(data["username"])
 						self.players[uid] = player
+						print("added player")
 			else:
 				if (self.accountMessages[uid]["action"] == "logout"):
 					self.players.pop(self.accountMessages[uid]["user"], None)
@@ -66,7 +67,7 @@ class GameLogic():
 			result.append(res)
 
 
-		print(result)
+		#print(result)
 		return result #this should be a list of dicts of type {"user":uid, data:data}, data should include for example positions by player
 
 def startGameLogic(inQue, outQue):
