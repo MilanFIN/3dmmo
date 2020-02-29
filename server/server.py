@@ -31,7 +31,7 @@ class MessageHandler(tornado.websocket.WebSocketHandler):
 	def check_origin(self, origin):
 		return True
 	def open(self):
-		self.uuid = uuid.uuid4()
+		self.uuid = str(uuid.uuid4())
 
 		while True:
 			if (self.uuid in clients):

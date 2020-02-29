@@ -1,42 +1,79 @@
 
 from multiprocessing import Process, Queue
-from time import sleep
+import time
 import uuid
+from player import *
 
 
 class GameLogic():
 	def __init__(self):
 		pass
 		self.players = {}
-		self.messages = {}
+		self.gameMessages = {}
+		self.accountMessages = {}
 	def newMessage(self, message):
 		if ("user" in message):
-			self.messages[message["user"]] = message
+			if (message["user"] in self.players):
+				self.gameMessages[message["user"]] = message
+			else:
+				self.accountMessages[message["user"]] = message
 	def emptyMessages(self):
-		self.messages = {}
+		self.gameMessages = {}
 	def tick(self):
-		#go through all messages, after that figure out the current gamestate for each player
-		for uid in self.messages:
-			print(self.messages[uid])
+
+		#go through all messages and create the players, still needs delete?
+		for uid in self.accountMessages:
 			if (uid not in self.players):
-				if (self.messages[uid]["auth"] == "accepted"):
-					print("should create a player")
-		pass
-		return [] #this should be a list of dicts of type {"user":uid, data:data}, data should include for example positions by player
+				if (self.accountMessages[uid]["auth"] == "accepted"):
+					print("creating a player")
+					data = self.accountMessages[uid]["data"]
+					if ("username" in data):
+						player = Player(data["username"])
+						self.players[uid] = player
+		self.accountMessages = {}
+
+
+		#go through all messages, and change their state accordingly
+		for uid in self.gameMessages:
+			#print(self.gameMessages[uid])
+			pass
+		self.gameMessages = {}	
+
+
+		#make a list of each players restricted gamestate, player specific stuff would be added later
+		playerStates = {}
+		for uid in self.players:
+			player = self.players[uid]
+			playerState = {}
+			playerState["username"] = player.username
+			playerState["x"] = player.x
+			playerState["y"] = player.y
+			playerState["state"] = player.state
+
+			playerStates[player.username] = playerState
+
+		result = []
+		for uid in self.players:
+			res = {"user":uid, "data":playerStates}
+			result.append(res)
+
+
+		print(result)
+		return result #this should be a list of dicts of type {"user":uid, data:data}, data should include for example positions by player
 
 def startGameLogic(inQue, outQue):
 	gameLogic = GameLogic()
 
+
+
 	while True:
 		idle = True
-		messages = 0
-		while (messages < 200):
-			if (inQue.empty()):
-				break
-			msg = inQue.get()
-			gameLogic.newMessage(msg)
-			messages += 1
-			idle = False
+		startTime = time.time()
+		while (time.time() - startTime < 0.5):
+			if (not inQue.empty()):
+				msg = inQue.get()
+				gameLogic.newMessage(msg)
+				idle = False
 
 		outbound = gameLogic.tick()
 		gameLogic.emptyMessages()
@@ -45,5 +82,5 @@ def startGameLogic(inQue, outQue):
 			for i in outbound:
 				outQue.put(i)
 		if (idle):
-			sleep(0.5)
+			time.sleep(0.5)
 

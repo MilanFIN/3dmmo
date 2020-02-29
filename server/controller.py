@@ -56,6 +56,13 @@ class Controller:
 			elif (message["auth"] == "rejected"):
 				messages.append(message)
 
+		roundCount = 0
+		while (roundCount < 1000):
+			if (self.gameOutQue.empty()):
+				break
+			roundCount += 1
+			message = self.gameOutQue.get()
+			messages.append(message)
 
 
 		return messages
