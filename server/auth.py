@@ -7,16 +7,26 @@ from time import sleep
 class AuthService:
 	def __init__(self):
 		self.OutBoundMessages = []
+		self.loggedInUsers = {} #{uid, username}
 	def newMessage(self, message):
 		#self.OutBoundMessages.append("user";)
-		if ("action" in message and "username" in message and "password" in message):
-			response = {}
-			response["user"] = message["user"]
-			response["auth"] = "accepted"
-			response["data"] = {"username": message["username"]}
-			self.OutBoundMessages.append(response)
+		accepted = False
+		if ("action" in message):
+			if (message["action"] == "login" and "username" in message and "password" in message):
+				if (message["username"] not in self.loggedInUsers):
+					accepted = True
+					response = {}
+					response["user"] = message["user"]
+					response["auth"] = "accepted"
+					response["data"] = {"username": message["username"]}
+					self.OutBoundMessages.append(response)
+					self.loggedInUsers[message["user"]] = message["username"]
+					#print(message["username"])
+			elif (message["action"] == "logout" and "user" in message):
+				self.loggedInUsers.pop(message["user"], None)
 
-		else:
+
+		if (not accepted):
 			response = {}
 			response["user"] = message["user"]
 			response["auth"] = "rejected"

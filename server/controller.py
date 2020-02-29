@@ -7,8 +7,8 @@ from gamelogic import *
 
 class Controller:
 	def __init__(self):
-		self.authorizedUsers = {}
-		self.unAuthUsers = {}
+		self.authorizedUsers = []
+		self.unAuthUsers = []
 
 		self.authInQue = Queue()
 		self.authOutQue = Queue()
@@ -24,13 +24,19 @@ class Controller:
 
 
 	def newMessage(self, message):
+
 		if ("user" in message):
-			if (message["user"] in self.authorizedUsers):
+			if (message["user"] in self.authorizedUsers and "action" in message):
+
+				if (message["action"] == "logout"):
+					self.authorizedUsers.remove(message["user"])
+					self.authInQue.put(message)
+					self.gameInQue.put(message)
+
+
 				pass
 				#user is logged in, can handle message as normal
-			elif (message["user"] not in self.unAuthUsers):
-
-				self.unAuthUsers[message["user"]] = 1
+			else:
 				if (message["action"] == "login"):
 					self.authInQue.put(message)
 				#user has just connected, feed to login service
@@ -53,6 +59,7 @@ class Controller:
 				#print(message)
 				self.gameInQue.put(message)
 				messages.append(message)
+				self.authorizedUsers.append(message["user"])
 			elif (message["auth"] == "rejected"):
 				messages.append(message)
 

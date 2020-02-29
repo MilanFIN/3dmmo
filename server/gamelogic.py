@@ -8,15 +8,17 @@ from player import *
 class GameLogic():
 	def __init__(self):
 		pass
-		self.players = {}
+		self.players = {} # {uid: Player}
 		self.gameMessages = {}
 		self.accountMessages = {}
 	def newMessage(self, message):
 		if ("user" in message):
-			if (message["user"] in self.players):
-				self.gameMessages[message["user"]] = message
-			else:
+			if (message["user"] not in self.players):
 				self.accountMessages[message["user"]] = message
+			elif (message["action"] == "logout"):
+				self.accountMessages[message["user"]] = message
+			else:
+				self.gameMessages[message["user"]] = message
 	def emptyMessages(self):
 		self.gameMessages = {}
 	def tick(self):
@@ -30,13 +32,19 @@ class GameLogic():
 					if ("username" in data):
 						player = Player(data["username"])
 						self.players[uid] = player
+			else:
+				if (self.accountMessages[uid]["action"] == "logout"):
+					self.players.pop(self.accountMessages[uid]["user"], None)
+
+
 		self.accountMessages = {}
 
 
 		#go through all messages, and change their state accordingly
 		for uid in self.gameMessages:
-			#print(self.gameMessages[uid])
-			pass
+			if (uid in self.players):
+				#print(self.gameMessages[uid])
+				pass
 		self.gameMessages = {}	
 
 

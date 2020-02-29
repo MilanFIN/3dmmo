@@ -49,7 +49,11 @@ class MessageHandler(tornado.websocket.WebSocketHandler):
 			messageInQue.put(parsed_msg)
 		
 	def on_close(self):
+		msg = {"user":self.uuid, "action":"logout"}
+		messageInQue.put(msg)
 		clients.pop(self.uuid, None)
+
+
 
 def make_app():
 	return tornado.web.Application([
