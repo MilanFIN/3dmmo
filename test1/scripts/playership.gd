@@ -8,7 +8,8 @@ var velocity = Vector3(0,0,0)
 var target = Vector2(0,0) #x,z target location
 var difference = 0 #difference between current angle and goal
 var state = "idle" #idle, turning, moving
-
+var angle = 0
+var targetAngle = 0
 
 func _ready():
 	pass
@@ -17,6 +18,9 @@ func _ready():
 
 func _physics_process(delta):
 	var meshNode = get_node("./PlayerMesh")
+	
+	angle = rad2deg(meshNode.rotation.y)
+
 	#translation = Vector3(-14, translation.y, -14)
 	#print(difference)
 	
@@ -75,4 +79,7 @@ func moveTo(targetLocation):
 	difference = rad2deg( forward.angle_to(targetDir))
 	state = "turning"
 	target = -Vector2(targetLocation.x, targetLocation.z)
+	
+	targetAngle = angle - difference
+	
 	#print(targetDir)

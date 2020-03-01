@@ -13,7 +13,7 @@ class GameLogic():
 		self.accountMessages = {}
 	def newMessage(self, message):
 		if ("user" in message):
-			if (message["user"] not in self.players):
+			if (message["user"] not in self.players and "auth" in message):
 				self.accountMessages[message["user"]] = message
 			elif (message["action"] == "logout"):
 				self.accountMessages[message["user"]] = message
@@ -32,7 +32,6 @@ class GameLogic():
 					if ("username" in data):
 						player = Player(data["username"])
 						self.players[uid] = player
-						print("added player")
 			else:
 				if (self.accountMessages[uid]["action"] == "logout"):
 					self.players.pop(self.accountMessages[uid]["user"], None)
@@ -44,8 +43,22 @@ class GameLogic():
 		#go through all messages, and change their state accordingly
 		for uid in self.gameMessages:
 			if (uid in self.players):
-				#print(self.gameMessages[uid])
-				pass
+				msg = self.gameMessages[uid]
+				player = self.players[uid]
+				if ("action" in msg):
+					#idling
+					if (msg["action"] == "idle" and "angle" in msg):
+						player.angle = float(msg["angle"])
+						player.state = "idle"
+						print("idling")
+					elif (msg["action"] == "turning" and "angle" in msg and "targetangle" in msg):
+						player.angle = float(msg["angle"])
+						player.targetAngle = float(msg["targetangle"])
+						player.state = "turning"
+						print("turning")
+
+
+
 		self.gameMessages = {}	
 
 
@@ -58,6 +71,9 @@ class GameLogic():
 			playerState["x"] = player.x
 			playerState["y"] = player.y
 			playerState["state"] = player.state
+			playerState["angle"] = str(player.angle)
+			if (player.state == "turning"):
+				playerState["targetangle"] = player.targetAngle
 
 			playerStates[player.username] = playerState
 

@@ -9,6 +9,7 @@ var outBoundMessage = {}
 var username = global.username
 var otherPlayers = []
 
+
 func _ready():
 	address = global.address
 	port = global.port
@@ -26,8 +27,8 @@ func _ready():
 	
 	
 	timer = Timer.new()
-	timer.connect("timeout",self,"_on_timer_timeout") 
-	timer.set_wait_time(0.1)
+	timer.connect("timeout",self,"sendState") 
+	timer.set_wait_time(0.5)
 	
 	#timeout is what says in docs, in signals
 	#self is who respond to the callback
@@ -61,13 +62,26 @@ func _data_received(p_id = 1):
 	
 
 	
-func _on_timer_timeout():
+func sendState():
 	ws.poll()
 	timer.start()
-	if (not outBoundMessage.empty()):
-		var message = JSON.print(outBoundMessage).to_utf8()
-		outBoundMessage = {}
-		
+
+	if (not loggedIn):
+		return
+
+	var player = get_node("./level/playership")
+	var state = player.state
+	var status = {"action":state}
+	var angle = player.angle
+	if (state == "idle"):
+		status["angle"] = str(angle)
+	elif (state == "turning"):
+
+		var targetangle = player.targetAngle
+		status["angle"] = str(angle)
+		status["targetangle"] = str(targetangle)
+
+	ws.get_peer(1).put_packet(JSON.print(status).to_utf8())
 	
 	"""
 	if (ws):

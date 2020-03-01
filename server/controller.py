@@ -28,12 +28,14 @@ class Controller:
 		if ("user" in message):
 			if (message["user"] in self.authorizedUsers and "action" in message):
 
-				if (message["action"] == "logout"):
+				action = message["action"]
+				if (action == "logout"):
 					self.authorizedUsers.remove(message["user"])
 					self.authInQue.put(message)
 					self.gameInQue.put(message)
 
-
+				if (action == "idle" or action == "turning"):
+					self.gameInQue.put(message)
 				pass
 				#user is logged in, can handle message as normal
 			else:
