@@ -76,10 +76,13 @@ func sendState():
 	if (state == "idle"):
 		status["angle"] = str(angle)
 	elif (state == "turning"):
-
 		var targetangle = player.targetAngle
 		status["angle"] = str(angle)
 		status["targetangle"] = str(targetangle)
+	elif (state == "moving"):
+		status["x"] = str(player.translation.x)
+		status["y"] = str(player.translation.z)
+
 
 	ws.get_peer(1).put_packet(JSON.print(status).to_utf8())
 	
@@ -126,14 +129,15 @@ func handleMessage(message):
 			for i in range(others.size() - 1, -1, -1):
 				if (not others[i].name in relevant):
 					otherRoot.remove_child(others[i])
-					print("poistetaan")
+					print("poistetaan") 
 			#update the info on children
 			others = otherRoot.get_children()
 			#handle stuff regarding other players
 			for other in others:
 				var name = other.name
 				var data = relevant[name]
-				print(name, data)
+				#print(name, data)
+				other.updateState(data)
 			#handle the player themself
 			var playerData = relevant[username]
-			print(playerData)
+			#print(playerData)

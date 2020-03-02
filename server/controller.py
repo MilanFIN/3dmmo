@@ -34,7 +34,7 @@ class Controller:
 					self.authInQue.put(message)
 					self.gameInQue.put(message)
 
-				if (action == "idle" or action == "turning"):
+				if (action == "idle" or action == "turning" or action == "moving"):
 					self.gameInQue.put(message)
 				pass
 				#user is logged in, can handle message as normal

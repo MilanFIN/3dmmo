@@ -50,12 +50,16 @@ class GameLogic():
 					if (msg["action"] == "idle" and "angle" in msg):
 						player.angle = float(msg["angle"])
 						player.state = "idle"
-						print("idling")
+						#print("idling")
 					elif (msg["action"] == "turning" and "angle" in msg and "targetangle" in msg):
 						player.angle = float(msg["angle"])
 						player.targetAngle = float(msg["targetangle"])
 						player.state = "turning"
-						print("turning")
+					elif (msg["action"] == "moving" and "x" in msg and "y" in msg):
+						player.x = msg["x"]
+						player.y = msg["y"]
+						player.state = "moving"
+						print(msg)
 
 
 
@@ -74,6 +78,9 @@ class GameLogic():
 			playerState["angle"] = str(player.angle)
 			if (player.state == "turning"):
 				playerState["targetangle"] = player.targetAngle
+			if (player.state == "moving"):
+				playerState["x"] = player.x
+				playerState["y"] = player.y
 
 			playerStates[player.username] = playerState
 
