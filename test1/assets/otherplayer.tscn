@@ -4,7 +4,7 @@
 
 [sub_resource type="CubeMesh" id=1]
 
-[node name="otherplayer" type="Spatial"]
+[node name="otherplayer" type="KinematicBody"]
 script = ExtResource( 1 )
 
 [node name="Mesh" type="MeshInstance" parent="."]

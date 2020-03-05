@@ -23,7 +23,26 @@ while x < 1:
 	message = json.dumps(message)
 	ws.send(message)	
 	ws.recv()
-	time.sleep(1)
+	time.sleep(2)
+	x += 1
+
+x = 0
+while x < 1:
+
+	message = {"action":"moving", "x":"0", "y":"0", "targetx":"10", "targety":"10"}
+	message = json.dumps(message)
+	ws.send(message)	
+	ws.recv()
+	time.sleep(5)
+	x += 1
+x = 0
+while x < 100:
+
+	message = {"action":"idle", "x":"0", "y":"0", "targetx":"10", "targety":"10"}
+	message = json.dumps(message)
+	ws.send(message)	
+	ws.recv()
+	time.sleep(5)
 	x += 1
 """
 x = 0

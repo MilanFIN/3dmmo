@@ -8,3 +8,5 @@ class Player():
 		self.state = "idle"
 		self.angle = 0
 		self.targetAngle = 0
+		self.targetX = 0
+		self.targetY = 0

@@ -80,8 +80,11 @@ func sendState():
 		status["angle"] = str(angle)
 		status["targetangle"] = str(targetangle)
 	elif (state == "moving"):
+		status["angle"] = str(player.angle)
 		status["x"] = str(player.translation.x)
 		status["y"] = str(player.translation.z)
+		status["targetx"] = str(player.target.x)
+		status["targety"] = str(player.target.y)
 
 
 	ws.get_peer(1).put_packet(JSON.print(status).to_utf8())
