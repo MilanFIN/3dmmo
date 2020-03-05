@@ -5,6 +5,9 @@ import uuid
 from player import *
 
 
+TICKRATE = 0.5
+
+
 class GameLogic():
 	def __init__(self):
 		pass
@@ -107,7 +110,7 @@ def startGameLogic(inQue, outQue):
 	while True:
 		idle = True
 		startTime = time.time()
-		while (time.time() - startTime < 0.5):
+		while (time.time() - startTime < TICKRATE):
 			if (not inQue.empty()):
 				msg = inQue.get()
 				gameLogic.newMessage(msg)
@@ -120,5 +123,5 @@ def startGameLogic(inQue, outQue):
 			for i in outbound:
 				outQue.put(i)
 		if (idle):
-			time.sleep(0.5)
+			time.sleep(TICKRATE)
 
