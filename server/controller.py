@@ -3,6 +3,7 @@ from time import sleep
 
 from auth import *
 from gamelogic import *
+from messagelogic import *
 
 
 class Controller:
@@ -22,6 +23,11 @@ class Controller:
 		self.game = Process(target=startGameLogic, args=(self.gameInQue, self.gameOutQue))
 		self.game.start()
 
+		self.msgInQue = Queue()
+		self.msgOutQue = Queue()
+
+		self.msgLogic = Process(target=startMessageLogic, args=(self.msgInQue, self.msgOutQue))
+		self.msgLogic.start()
 
 	def newMessage(self, message):
 
@@ -33,9 +39,13 @@ class Controller:
 					self.authorizedUsers.remove(message["user"])
 					self.authInQue.put(message)
 					self.gameInQue.put(message)
+					self.msgInQue.put(message)
+
 
 				if (action == "idle" or action == "turning" or action == "moving"):
 					self.gameInQue.put(message)
+				if (action == "message"):
+					self.msgInQue.put(message)
 				pass
 				#user is logged in, can handle message as normal
 			else:
@@ -60,6 +70,8 @@ class Controller:
 				#print("NEW LOGIN:")
 				#print(message)
 				self.gameInQue.put(message)
+				self.msgInQue.put(message)
+
 				messages.append(message)
 				self.authorizedUsers.append(message["user"])
 			elif (message["auth"] == "rejected"):
@@ -71,6 +83,15 @@ class Controller:
 				break
 			roundCount += 1
 			message = self.gameOutQue.get()
+			messages.append(message)
+
+
+		roundCount = 0
+		while (roundCount < 1000):
+			if (self.msgOutQue.empty()):
+				break
+			roundCount += 1
+			message = self.msgOutQue.get()
 			messages.append(message)
 
 

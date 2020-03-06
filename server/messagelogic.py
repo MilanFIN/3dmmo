@@ -19,8 +19,9 @@ class MessageLogic():
 			elif (message["action"] == "logout"):
 				self.accountMessages[message["user"]] = message
 			else:
-				self.messages[message["user"]] = message
-				self.actedPlayers[message["user"]] = 1
+				if (message["user"] not in self.actedPlayers and "data" in message):
+					self.messages[message["user"]] = message
+					self.actedPlayers[message["user"]] = 1
 
 	def tick(self):
 
@@ -35,19 +36,36 @@ class MessageLogic():
 				if (self.accountMessages[uid]["action"] == "logout"):
 					self.players.pop(self.accountMessages[uid]["user"], None)
 
+		self.accountMessages.clear()
 
 		##FINISH THIS
-		result = []
-		for uid in messages:
+		messageBatch = []
+		for uid in self.messages:
 			if (uid in self.players):
 				username = self.players[uid]
+				message = self.messages[uid]["data"]
+				messageBatch.append({"u": username, "m":message})
 				pass
 			pass
 
+		self.actedPlayers.clear()
+		self.messages.clear()
+
+
+		result = []
+
+		if (len(messageBatch) != 0):
+			for uid in self.players:
+				res = {"user":uid, "data":messageBatch}
+				result.append(res)
+
+
+		return result
+
+
+
 def startMessageLogic(inQue, outQue):
 	msgLogic = MessageLogic()
-
-
 
 	while True:
 		idle = True
@@ -55,10 +73,10 @@ def startMessageLogic(inQue, outQue):
 		while (time.time() - startTime < TICKRATE):
 			if (not inQue.empty()):
 				msg = inQue.get()
-				MessageLogic.newMessage(msg)
+				msgLogic.newMessage(msg)
 				idle = False
 
-		outbound = MessageLogic.tick()
+		outbound = msgLogic.tick()
 
 		if (len(outbound) != 0):
 			idle = False
