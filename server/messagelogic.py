@@ -56,7 +56,7 @@ class MessageLogic():
 
 		if (len(messageBatch) != 0):
 			for uid in self.players:
-				res = {"user":uid, "data":messageBatch}
+				res = {"user":uid, "data":messageBatch, "type":"message"}
 				result.append(res)
 
 

@@ -95,7 +95,7 @@ class GameLogic():
 
 		result = []
 		for uid in self.players:
-			res = {"user":uid, "data":playerStates}
+			res = {"user":uid, "data":playerStates, "type":"game"}
 			result.append(res)
 
 

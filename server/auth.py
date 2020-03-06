@@ -30,6 +30,7 @@ class AuthService:
 			response = {}
 			response["user"] = message["user"]
 			response["auth"] = "rejected"
+			response["type"] = "auth"
 			self.OutBoundMessages.append(response)
 		pass
 	def getOutBoundMessages(self):
