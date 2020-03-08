@@ -109,38 +109,42 @@ func handleMessage(message):
 				print("logged in")
 				loggedIn = true
 	else:
-		if ("data" in message):
-			var relevant = message["data"]
-
-			var otherRoot = get_node("./level/OtherPlayers")
-			var others = otherRoot.get_children()
-			var existingNames = []
-			for o in others:
-				existingNames.append(o.name)
-
-			#add nodes that have connected since last tick
-			for person in relevant:
-				if (person != username):
-					if (not person in existingNames):
-
-						var otherplayer = load("res://assets/otherplayer.tscn")
-						var other_instance = otherplayer.instance()
-						other_instance.set_name(person)
-						otherRoot.add_child(other_instance)
-						print("lisätään")
-			#remove nodes that have disconnected
-			for i in range(others.size() - 1, -1, -1):
-				if (not others[i].name in relevant):
-					otherRoot.remove_child(others[i])
-					print("poistetaan") 
-			#update the info on children
-			others = otherRoot.get_children()
-			#handle stuff regarding other players
-			for other in others:
-				var name = other.name
-				var data = relevant[name]
-				#print(name, data)
-				other.updateState(data)
-			#handle the player themself
-			var playerData = relevant[username]
-			#print(playerData)
+		if ("data" in message and "type" in message):
+			if (message["type"] == "game"):
+				var relevant = message["data"]
+	
+				var otherRoot = get_node("./level/OtherPlayers")
+				var others = otherRoot.get_children()
+				var existingNames = []
+				for o in others:
+					existingNames.append(o.name)
+	
+				#add nodes that have connected since last tick
+				for person in relevant:
+					if (person != username):
+						if (not person in existingNames):
+	
+							var otherplayer = load("res://assets/otherplayer.tscn")
+							var other_instance = otherplayer.instance()
+							other_instance.set_name(person)
+							otherRoot.add_child(other_instance)
+							print("lisätään")
+				#remove nodes that have disconnected
+				for i in range(others.size() - 1, -1, -1):
+					if (not others[i].name in relevant):
+						otherRoot.remove_child(others[i])
+						print("poistetaan") 
+				#update the info on children
+				others = otherRoot.get_children()
+				#handle stuff regarding other players
+				for other in others:
+					var name = other.name
+					var data = relevant[name]
+					#print(name, data)
+					other.updateState(data)
+				#handle the player themself
+				var playerData = relevant[username]
+				#print(playerData)
+			elif (message["type"] == "message"):
+				print(message)
+				#send message data to chatbox class

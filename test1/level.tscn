@@ -47,3 +47,32 @@ script = ExtResource( 2 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15.6908, 7.0384 )
 
 [node name="OtherPlayers" type="Node" parent="."]
+
+[node name="HUD" type="Control" parent="."]
+margin_top = -1.46411
+margin_right = 1280.0
+margin_bottom = 718.536
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MessageBox" type="RichTextLabel" parent="HUD"]
+margin_top = 496.0
+margin_right = 300.0
+margin_bottom = 696.0
+text = "asd"
+
+[node name="InputField" type="LineEdit" parent="HUD"]
+margin_top = 696.0
+margin_right = 300.0
+margin_bottom = 720.0
+
+[node name="SendButton" type="Button" parent="HUD"]
+margin_left = 300.0
+margin_top = 696.0
+margin_right = 346.0
+margin_bottom = 720.0
+text = "SEND"
+__meta__ = {
+"_edit_use_anchors_": false
+}
