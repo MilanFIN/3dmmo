@@ -11,6 +11,8 @@ var state = "idle" #idle, turning, moving
 var angle = 0
 var targetAngle = 0
 
+
+
 func _ready():
 	pass
 	
@@ -83,3 +85,15 @@ func moveTo(targetLocation):
 	targetAngle = angle - difference
 	
 	#print(targetDir)
+
+
+func _on_hud_mouse_entered():
+	var camera = get_node("./Camera")
+	camera.disableClick()
+	pass # Replace with function body.
+
+
+func _on_hud_mouse_exited():
+	var camera = get_node("./Camera")
+	camera.enableClick()
+	pass # Replace with function body.

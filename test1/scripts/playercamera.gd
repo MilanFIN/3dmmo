@@ -10,6 +10,7 @@ const ZOOMSPEED = 1
 const MINDIST = 5
 const MAXDIST = 100
 const MOVEPLANESIZE = 1
+var canClick = true
 
 func _ready():
 	pass
@@ -85,20 +86,23 @@ func _input(event):
 		zoomDirection = "back"
 		#velocity = SPEED * dir
 	if (event.is_action_pressed("ui_mouseleft")):
-		var position2D = get_viewport().get_mouse_position()
-		var point1 = Vector3(-MOVEPLANESIZE,0,-MOVEPLANESIZE)
-		var point2 = Vector3(-MOVEPLANESIZE,0,MOVEPLANESIZE)
-		var point3 = Vector3(MOVEPLANESIZE,0,-MOVEPLANESIZE)
-		#var dropPlane  = Plane(Vector3(0, 0, 10), 0)
-		var dropPlane = Plane(point1, point2, point3)
+		if (canClick):
+			var position2D = get_viewport().get_mouse_position()
+			var point1 = Vector3(-MOVEPLANESIZE,0,-MOVEPLANESIZE)
+			var point2 = Vector3(-MOVEPLANESIZE,0,MOVEPLANESIZE)
+			var point3 = Vector3(MOVEPLANESIZE,0,-MOVEPLANESIZE)
+			#var dropPlane  = Plane(Vector3(0, 0, 10), 0)
+			var dropPlane = Plane(point1, point2, point3)
+			var position3D = dropPlane.intersects_ray(project_ray_origin(position2D),project_ray_normal(position2D))
+			if (Position3D != null):
+				var node = get_node("../PlayerMesh")
+				var up = Vector3(0,1,0)
+				position3D = -position3D
+				var node2 = get_parent()
+				node2.moveTo(position3D)
 
-		var position3D = dropPlane.intersects_ray(project_ray_origin(position2D),project_ray_normal(position2D))
-		if (Position3D != null):
-			var node = get_node("../PlayerMesh")
-			var up = Vector3(0,1,0)
-			position3D = -position3D
-			#node.look_at(position3D, up)
-			#print(position3D)
+func disableClick():
+	canClick = false
 
-			var node2 = get_parent()
-			node2.moveTo(position3D)
+func enableClick():
+	canClick = true
