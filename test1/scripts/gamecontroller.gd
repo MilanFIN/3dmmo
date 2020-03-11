@@ -69,6 +69,7 @@ func sendState():
 	if (not loggedIn):
 		return
 
+	# PLAYER STATE
 	var player = get_node("./level/playership")
 	var state = player.state
 	var status = {"action":state}
@@ -85,21 +86,18 @@ func sendState():
 		status["y"] = str(player.translation.z)
 		status["targetx"] = str(player.target.x)
 		status["targety"] = str(player.target.y)
-
-
+		
 	ws.get_peer(1).put_packet(JSON.print(status).to_utf8())
 	
-	"""
-	if (ws):
-		var node = get_node("./level/playership")
-		var x = node.translation.x
-		var y = node.translation.z
-		var state = node.state
-		var d = {"x": x, "y":y, "state":state}
-		ws.get_peer(1).put_packet(JSON.print(d).to_ascii())
-		ws.poll()
-	"""
+	# MESSAGE THAT THE PLAYER HAS SENT
+	var msgNode = get_node("./level/HUD/SendButton")
+	var msg = msgNode.message
+	msgNode.message = ""
+	if (msg != ""):
+		var messageStatus = {"action":"message", "data":msg}
+		ws.get_peer(1).put_packet(JSON.print(messageStatus).to_utf8())
 
+	
 
 func handleMessage(message):
 
@@ -146,5 +144,8 @@ func handleMessage(message):
 				var playerData = relevant[username]
 				#print(playerData)
 			elif (message["type"] == "message"):
-				print(message)
+				var messageBox = get_node("./level/HUD/MessageBox")
+				messageBox.addMessageBatch(message["data"])
+
+				
 				#send message data to chatbox class
