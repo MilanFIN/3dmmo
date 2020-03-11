@@ -58,11 +58,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MessageBox" type="RichTextLabel" parent="HUD"]
+[node name="MessageBox" type="Label" parent="HUD"]
 margin_top = 496.0
 margin_right = 300.0
 margin_bottom = 696.0
-text = "asd"
+valign = 2
+clip_text = true
 script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
