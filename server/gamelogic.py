@@ -3,6 +3,7 @@ from multiprocessing import Process, Queue
 import time
 import uuid
 from player import *
+from gamemap import *
 
 
 TICKRATE = 0.5
@@ -14,6 +15,9 @@ class GameLogic():
 		self.players = {} # {uid: Player}
 		self.gameMessages = {}
 		self.accountMessages = {}
+
+		self.maps = {}
+		self.maps["0"] = GameMap("0")
 	def newMessage(self, message):
 		if ("user" in message):
 			if (message["user"] not in self.players and "auth" in message):

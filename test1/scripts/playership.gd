@@ -1,7 +1,7 @@
 extends KinematicBody
 
-const SPEED = 5
-const ROTSPEED = 1
+const SPEED = 500
+const ROTSPEED = 70
 var velocity = Vector3(0,0,0)
 
 
@@ -28,16 +28,16 @@ func _physics_process(delta):
 	
 	if (state == "turning"):
 		if (difference < 0):
-			meshNode.rotate_y(deg2rad(ROTSPEED))
-			difference += ROTSPEED
+			meshNode.rotate_y(deg2rad(ROTSPEED*delta))
+			difference += ROTSPEED*delta
 		elif (difference > 0):
-			meshNode.rotate_y(deg2rad(-ROTSPEED))
-			difference -= ROTSPEED
+			meshNode.rotate_y(deg2rad(-ROTSPEED*delta))
+			difference -= ROTSPEED*delta
 		if (abs(difference) < 2):
 			state = "moving"
 	elif (state == "moving"):
 		var direction = Vector3(target.x-translation.x, 0, target.y-translation.z).normalized()
-		move_and_slide(direction*SPEED)
+		move_and_slide(direction*SPEED*delta)
 		var locationDifference = abs(target.x-translation.x)+abs(target.y-translation.z)
 		if (locationDifference < 0.5):
 			state = "idle"
