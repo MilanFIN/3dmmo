@@ -16,6 +16,12 @@ class GameObject():
 
 		#object specific data, per object
 		self.radius = data["radius"]
-		self.model = data["model"]
 		self.block = data["block"]
 		self.name = data["name"]
+
+	def getData(self):
+		data = {}
+		data["x"] = self.x
+		data["y"] = self.y
+		data["type"] = self.type
+		return data

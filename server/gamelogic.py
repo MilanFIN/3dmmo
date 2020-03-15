@@ -18,6 +18,9 @@ class GameLogic():
 
 		self.maps = {}
 		self.maps["0"] = GameMap("0")
+		print(self.maps["0"].getMap())
+
+
 	def newMessage(self, message):
 		if ("user" in message):
 			if (message["user"] not in self.players and "auth" in message):
