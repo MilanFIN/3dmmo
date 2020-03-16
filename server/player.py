@@ -10,3 +10,11 @@ class Player():
 		self.targetAngle = 0
 		self.targetX = 0
 		self.targetY = 0
+		self.map = "0"
+		self.mapValid = False
+	def getMapId(self):
+		return self.map
+	def hasValidMap(self):
+		return self.mapValid
+	def validateMap(self):
+		self.mapValid = True

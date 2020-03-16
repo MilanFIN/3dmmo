@@ -146,6 +146,7 @@ func handleMessage(message):
 			elif (message["type"] == "message"):
 				var messageBox = get_node("./level/HUD/MessageBox")
 				messageBox.addMessageBatch(message["data"])
-
+			elif (message["type"] == "map"):
+				print(message)
 				
 				#send message data to chatbox class

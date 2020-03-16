@@ -18,7 +18,6 @@ class GameLogic():
 
 		self.maps = {}
 		self.maps["0"] = GameMap("0")
-		print(self.maps["0"].getMap())
 
 
 	def newMessage(self, message):
@@ -104,6 +103,18 @@ class GameLogic():
 		for uid in self.players:
 			res = {"user":uid, "data":playerStates, "type":"game"}
 			result.append(res)
+			
+			#handle map changes/initialization with the default map
+			player = self.players[uid]
+			if (not player.hasValidMap()):
+				print("not valid")
+				player.validateMap()
+				mapId = player.getMapId()
+				mapJSON = self.maps[mapId].getMap()
+				res1 = {"user":uid, "data":mapJSON, "type":"map"}
+				result.append(res1)
+
+				
 
 
 		#print(result)
