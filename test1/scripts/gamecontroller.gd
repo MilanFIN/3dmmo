@@ -147,6 +147,21 @@ func handleMessage(message):
 				var messageBox = get_node("./level/HUD/MessageBox")
 				messageBox.addMessageBatch(message["data"])
 			elif (message["type"] == "map"):
-				print(message)
-				
-				#send message data to chatbox class
+				var mapRoot = get_node("./level/StaticMap")
+				var mapObjects = mapRoot.get_children()
+				for n in mapObjects:
+					mapObjects.remove_child(n)
+					n.free()
+				var objects = parse_json(message["data"])
+				for o in objects:
+					print(o, objects[o])
+					var type = objects[o]["type"]
+					var x = objects[o]["x"]
+					var y = objects[o]["y"]
+					var mapObject = load("res://assets/mapobjects/"+type+".tscn")
+					var objectInstance = mapObject.instance()
+					objectInstance.set_name(o)
+					objectInstance.setPos(x, y)
+					mapRoot.add_child(objectInstance)
+					print("lisätään")
+
