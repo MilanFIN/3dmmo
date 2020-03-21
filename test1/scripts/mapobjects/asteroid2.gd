@@ -1,5 +1,5 @@
-extends Spatial
-#extends "res://your_script.gd"
+extends Spatial 
+
 
 
 # Declare member variables here. Examples:
@@ -10,6 +10,7 @@ extends Spatial
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
+
 
 func setPos(x, y):
 	print(x, " ", y)
