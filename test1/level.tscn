@@ -26,6 +26,8 @@ script = ExtResource( 2 )
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15.6908, 7.0384 )
+light_energy = 5.0
+light_indirect_energy = 5.0
 
 [node name="OtherPlayers" type="Node" parent="."]
 
