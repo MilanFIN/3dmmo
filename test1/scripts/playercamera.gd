@@ -84,17 +84,25 @@ func _input(event):
 	if (event.is_action_pressed("ui_mousewheeldown")):
 		var dir = get_global_transform().basis.z
 		zoomDirection = "back"
-		#velocity = SPEED * dir
 	if (event.is_action_pressed("ui_mouseleft")):
 		if (canClick):
 			var position2D = get_viewport().get_mouse_position()
 			var point1 = Vector3(-MOVEPLANESIZE,0,-MOVEPLANESIZE)
 			var point2 = Vector3(-MOVEPLANESIZE,0,MOVEPLANESIZE)
 			var point3 = Vector3(MOVEPLANESIZE,0,-MOVEPLANESIZE)
-			#var dropPlane  = Plane(Vector3(0, 0, 10), 0)
 			var dropPlane = Plane(point1, point2, point3)
 			var position3D = dropPlane.intersects_ray(project_ray_origin(position2D),project_ray_normal(position2D))
 			if (position3D != null):
+				#figure out if the click collides with another object or not
+				var mapRoot = get_tree().get_root().get_node("gamecontroller/level/StaticMap")
+				for i in mapRoot.get_children():
+					var collShape = i.get_node("./CollisionShape")
+					var radius = collShape.shape.radius
+					if((i.translation - position3D).length() < radius):
+						print(i.name)
+						#found the clicked item!
+
+
 				var node = get_node("../PlayerMesh")
 				var up = Vector3(0,1,0)
 				position3D = -position3D

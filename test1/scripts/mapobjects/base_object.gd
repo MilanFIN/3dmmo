@@ -12,7 +12,6 @@ func _ready():
 
 
 func setPos(x, y):
-	print(x, " ", y)
 	translation.x = int(x)
 	translation.z = int(y)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
