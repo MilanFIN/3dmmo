@@ -56,7 +56,9 @@ class GameLogic():
 				player = self.players[uid]
 				if ("action" in msg):
 					#idling
-					if (msg["action"] == "idle" and "angle" in msg):
+					if (msg["action"] == "idle" and "angle" in msg and "x" in msg and "y" in msg):
+						player.x = msg["x"]
+						player.y = msg["y"]
 						player.angle = float(msg["angle"])
 						player.state = "idle"
 						#print("idling")

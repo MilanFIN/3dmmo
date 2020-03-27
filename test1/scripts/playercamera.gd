@@ -94,7 +94,7 @@ func _input(event):
 			#var dropPlane  = Plane(Vector3(0, 0, 10), 0)
 			var dropPlane = Plane(point1, point2, point3)
 			var position3D = dropPlane.intersects_ray(project_ray_origin(position2D),project_ray_normal(position2D))
-			if (Position3D != null):
+			if (position3D != null):
 				var node = get_node("../PlayerMesh")
 				var up = Vector3(0,1,0)
 				position3D = -position3D

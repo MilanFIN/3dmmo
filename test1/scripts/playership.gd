@@ -15,12 +15,13 @@ var targetAngle = 0
 
 func _ready():
 	pass
-	
+
 	
 
 func _physics_process(delta):
 	var meshNode = get_node("./PlayerMesh")
-	
+	var collisionNode = get_node("./CollisionShape")
+	collisionNode.rotation = meshNode.rotation
 	angle = rad2deg(meshNode.rotation.y)
 
 	#translation = Vector3(-14, translation.y, -14)
@@ -38,35 +39,15 @@ func _physics_process(delta):
 	elif (state == "moving"):
 		var direction = Vector3(target.x-translation.x, 0, target.y-translation.z).normalized()
 		move_and_slide(direction*SPEED*delta)
+
+		if (get_slide_count() != 0):
+			state = "idle"
+
 		var locationDifference = abs(target.x-translation.x)+abs(target.y-translation.z)
 		if (locationDifference < 0.5):
 			state = "idle"
 
 
-	"""
-	#print("phyx")
-	if (Input.is_action_pressed("ui_right")):
-		#velocity.x = SPEED
-		rotate_y(deg2rad(-ROTSPEED))
-		#$MeshInstance.rotate_y(0.05)
-	if (Input.is_action_pressed("ui_left")):
-		#velocity.x = -SPEED
-		rotate_y(deg2rad(ROTSPEED))
-	
-	if (Input.is_action_pressed("ui_up")):
-		#velocity.z = -SPEED
-		var dir = -get_global_transform().basis.z
-		velocity = SPEED * dir
-		print(get_viewport().get_mouse_position())
-		#print(get_viewport().get_global_mouse_position())d
-
-	move_and_slide(velocity)
-	
-	velocity.x = lerp(velocity.x, 0, 0.1)
-	velocity.z = lerp(velocity.z, 0, 0.1)
-
-	pass
-	"""
 
 func moveTo(targetLocation):
 	var meshNode = get_node("./PlayerMesh")

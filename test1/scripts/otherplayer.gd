@@ -54,14 +54,19 @@ func _physics_process(delta):
 			
 		
 	
-	
+
 
 func updateState(data):
 	#print(data)
 	var meshNode = get_node("./Mesh")
+	var previousState = state
 	state = data["state"]
 	if (state == "idle"):
 		angle = float(data["angle"])
+		if (previousState == "moving"):
+			x = float(data["x"])
+			y = float(data["y"])
+			print("STOPPING")
 	elif (state == "turning"):
 		if (targetAngle != data["targetangle"]):
 			angle = float(data["angle"])

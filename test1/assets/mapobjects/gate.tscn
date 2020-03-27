@@ -3,7 +3,7 @@
 [ext_resource path="res://assets/mapobjects/gate_model.tres" type="ArrayMesh" id=1]
 [ext_resource path="res://scripts/mapobjects/gate.gd" type="Script" id=2]
 
-[node name="Spatial" type="Spatial"]
+[node name="Staticbody" type="StaticBody"]
 script = ExtResource( 2 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]

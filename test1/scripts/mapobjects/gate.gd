@@ -1,4 +1,4 @@
-extends Spatial
+extends "res://scripts/mapobjects/base_object.gd"
 
 
 # Declare member variables here. Examples:
@@ -10,10 +10,6 @@ extends Spatial
 func _ready():
 	pass # Replace with function body.
 
-func setPos(x, y):
-	print(x, " ", y)
-	translation.x = int(x)
-	translation.z = int(y)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

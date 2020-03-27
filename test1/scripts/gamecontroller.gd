@@ -76,6 +76,8 @@ func sendState():
 	var angle = player.angle
 	if (state == "idle"):
 		status["angle"] = str(angle)
+		status["x"] = str(player.translation.x)
+		status["y"] = str(player.translation.z)
 	elif (state == "turning"):
 		var targetangle = player.targetAngle
 		status["angle"] = str(angle)
@@ -154,7 +156,6 @@ func handleMessage(message):
 					n.free()
 				var objects = parse_json(message["data"])
 				for o in objects:
-					print(o, objects[o])
 					var type = objects[o]["type"]
 					var x = objects[o]["x"]
 					var y = objects[o]["y"]
@@ -163,5 +164,5 @@ func handleMessage(message):
 					objectInstance.set_name(o)
 					objectInstance.setPos(x, y)
 					mapRoot.add_child(objectInstance)
-					print("lisätään")
+
 
