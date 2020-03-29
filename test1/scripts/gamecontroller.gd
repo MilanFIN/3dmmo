@@ -71,6 +71,8 @@ func sendState():
 
 	# PLAYER STATE
 	var player = get_node("./level/playership")
+	
+	#figure out state of movement
 	var state = player.state
 	var status = {"action":state}
 	var angle = player.angle
@@ -88,7 +90,14 @@ func sendState():
 		status["y"] = str(player.translation.z)
 		status["targetx"] = str(player.target.x)
 		status["targety"] = str(player.target.y)
-		
+	
+	#figure out state of acting?
+
+	if (player.action):
+		#print(player.actionTarget)
+		status["acttarget"] = player.actionTarget
+	
+	
 	ws.get_peer(1).put_packet(JSON.print(status).to_utf8())
 	
 	# MESSAGE THAT THE PLAYER HAS SENT
@@ -142,9 +151,18 @@ func handleMessage(message):
 					var data = relevant[name]
 					#print(name, data)
 					other.updateState(data)
+				
+				
 				#handle the player themself
 				var playerData = relevant[username]
-				#print(playerData)
+				if ("ackaction" in playerData):
+					var player = get_node("./level/playership")
+					player.setActionTarget("")
+					player.setAction(false)
+					print(playerData)
+
+
+
 			elif (message["type"] == "message"):
 				var messageBox = get_node("./level/HUD/MessageBox")
 				messageBox.addMessageBatch(message["data"])
@@ -159,10 +177,13 @@ func handleMessage(message):
 					var type = objects[o]["type"]
 					var x = objects[o]["x"]
 					var y = objects[o]["y"]
+					var action = objects[o]["action"]
 					var mapObject = load("res://assets/mapobjects/"+type+".tscn")
 					var objectInstance = mapObject.instance()
 					objectInstance.set_name(o)
 					objectInstance.setPos(x, y)
+					objectInstance.setAction(action)
+					
 					mapRoot.add_child(objectInstance)
 
 

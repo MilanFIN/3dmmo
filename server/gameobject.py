@@ -18,10 +18,15 @@ class GameObject():
 		self.radius = data["radius"]
 		self.block = data["block"]
 		self.name = data["name"]
+		self.action = data["action"]
+
+
+		self.data = {}
+		self.data["x"] = self.x
+		self.data["y"] = self.y
+		self.data["type"] = self.type
+		self.data["action"] = self.action
+
 
 	def getData(self):
-		data = {}
-		data["x"] = self.x
-		data["y"] = self.y
-		data["type"] = self.type
-		return data
+		return self.data

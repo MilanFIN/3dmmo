@@ -73,8 +73,11 @@ class GameLogic():
 						player.targetY = msg["targety"]
 						player.angle = msg["angle"]
 						player.state = "moving"
+				if ("acttarget" in msg):
+					targetId = msg["acttarget"]
+					player.actedThisTick = True
 
-
+					print(targetId)
 
 		self.gameMessages = {}	
 
@@ -98,6 +101,9 @@ class GameLogic():
 				playerState["targety"] = player.targetY
 				playerState["angle"] = player.angle
 				#print("playerstate", playerState)
+			
+			if (player.actedThisTick == True):
+				playerState["ackaction"] = "1"
 
 			playerStates[player.username] = playerState
 
@@ -118,6 +124,8 @@ class GameLogic():
 
 				
 
+		for uid in self.players:
+			self.players[uid].tickDone()
 
 		#print(result)
 		return result #this should be a list of dicts of type {"user":uid, data:data}, data should include for example positions by player

@@ -10,8 +10,8 @@ var difference = 0 #difference between current angle and goal
 var state = "idle" #idle, turning, moving
 var angle = 0
 var targetAngle = 0
-
-
+var action = false
+var actionTarget = ""
 
 func _ready():
 	pass
@@ -65,8 +65,11 @@ func moveTo(targetLocation):
 	
 	targetAngle = angle - difference
 	
-	#print(targetDir)
-
+func setAction(a):
+	action = a
+	
+func setActionTarget(target):
+	actionTarget = target
 
 func _on_hud_mouse_entered():
 	var camera = get_node("./Camera")

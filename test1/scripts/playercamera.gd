@@ -94,20 +94,34 @@ func _input(event):
 			var position3D = dropPlane.intersects_ray(project_ray_origin(position2D),project_ray_normal(position2D))
 			if (position3D != null):
 				#figure out if the click collides with another object or not
+				
+				var nodeClicked = false
+
+
 				var mapRoot = get_tree().get_root().get_node("gamecontroller/level/StaticMap")
 				for i in mapRoot.get_children():
 					var collShape = i.get_node("./CollisionShape")
 					var radius = collShape.shape.radius
 					if((i.translation - position3D).length() < radius):
-						print(i.name)
-						#found the clicked item!
+						var actionType = i.action()
+						var actionTarget = i.name
+						if (actionType != "none"):
+							pass
+							get_parent().setAction(true)
+							get_parent().setActionTarget(actionTarget)
+							nodeClicked = true
+							break
 
 
-				var node = get_node("../PlayerMesh")
+
+				if (not nodeClicked):
+					get_parent().setActionTarget("")
+					get_parent().setAction(false)
+					
 				var up = Vector3(0,1,0)
 				position3D = -position3D
-				var node2 = get_parent()
-				node2.moveTo(position3D)
+				get_parent().moveTo(position3D)
+
 
 func disableClick():
 	canClick = false
