@@ -28,3 +28,10 @@ class GameMap():
 		x = player.x
 		y = player.y
 		return False
+
+	def getObjectById(self, objId):
+		if (objId in self.objects):
+			return self.objects[objId]
+		else:
+			return None
+		

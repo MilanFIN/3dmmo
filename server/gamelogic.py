@@ -18,6 +18,7 @@ class GameLogic():
 
 		self.maps = {}
 		self.maps["0"] = GameMap("0")
+		self.maps["1"] = GameMap("1")
 
 
 	def newMessage(self, message):
@@ -57,29 +58,55 @@ class GameLogic():
 				if ("action" in msg):
 					#idling
 					if (msg["action"] == "idle" and "angle" in msg and "x" in msg and "y" in msg):
-						player.x = msg["x"]
-						player.y = msg["y"]
+						player.x = float(msg["x"])
+						player.y = float(msg["y"])
 						player.angle = float(msg["angle"])
 						player.state = "idle"
 						#print("idling")
 					elif (msg["action"] == "turning" and "angle" in msg and "targetangle" in msg):
+						if (player.targetAngle != msg["targetangle"]):
+							player.setAction(None)
 						player.angle = float(msg["angle"])
 						player.targetAngle = float(msg["targetangle"])
 						player.state = "turning"
 					elif (msg["action"] == "moving" and "x" in msg and "y" in msg and "targetx" in msg and "targety" in msg and "angle" in msg):
-						player.x = msg["x"]
-						player.y = msg["y"]
+						if (player.targetX != msg["targetx"] or player.targetY != msg["targety"]):
+							player.setAction(None)
+						player.x = float(msg["x"])
+						player.y = float(msg["y"])
 						player.targetX = msg["targetx"]
 						player.targetY = msg["targety"]
 						player.angle = msg["angle"]
 						player.state = "moving"
 				if ("acttarget" in msg):
 					targetId = msg["acttarget"]
-					player.actedThisTick = True
+					mapId = player.getMapId()
+					target = self.maps[mapId].getObjectById(targetId)
+					if (target != None):
+						timeDiff = time.clock() - player.getLastActionTime()
+						if (timeDiff > 1):
+							player.setAction(targetId)
+					player.ActionAcknowleged = True
 
-					print(targetId)
 
 		self.gameMessages = {}	
+
+		
+		for uid in self.players:
+			player = self.players[uid]
+			if (player.getAction() != None):
+				target = self.maps[player.getMapId()].getObjectById(player.getAction())
+				deltaX = abs(target.x - player.x)
+				deltaY = abs(target.y - player.y)
+				if (deltaX + deltaY < 30):
+					player.setAction(None)
+					player.resetActionTime()
+
+					actionType = target.action
+					if (actionType == "changemap"):
+						player.setMap(target.targetMap)
+						player.forcePosition(target.exitX, target.exitY)
+
 
 
 		#make a list of each players restricted gamestate, player specific stuff would be added later
@@ -92,6 +119,8 @@ class GameLogic():
 			playerState["y"] = player.y
 			playerState["state"] = player.state
 			playerState["angle"] = str(player.angle)
+			playerState["mapId"] = player.getMapId()
+
 			if (player.state == "turning"):
 				playerState["targetangle"] = player.targetAngle
 			if (player.state == "moving"):
@@ -100,16 +129,21 @@ class GameLogic():
 				playerState["targetx"] = player.targetX
 				playerState["targety"] = player.targetY
 				playerState["angle"] = player.angle
-				#print("playerstate", playerState)
 			
-			if (player.actedThisTick == True):
+			if (player.ActionAcknowleged == True):
 				playerState["ackaction"] = "1"
+				player.ActionAcknowleged = False
 
 			playerStates[player.username] = playerState
 
 		result = []
 		for uid in self.players:
-			res = {"user":uid, "data":playerStates, "type":"game"}
+			data = {}
+			for i in playerStates:
+				mapId = self.players[uid].getMapId()
+				if (playerStates[i]["mapId"] == mapId):
+					data[i] =  playerStates[i]
+			res = {"user":uid, "data":data, "type":"game"}
 			result.append(res)
 			
 			#handle map changes/initialization with the default map

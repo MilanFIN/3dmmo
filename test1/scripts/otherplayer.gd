@@ -78,6 +78,11 @@ func updateState(data):
 			x = float(data["x"])
 			y = float(data["y"])
 			target = newTarget
+	elif (state == "forceidle"):
+		state = "idle"
+		angle = float(data["angle"])
+		x = float(data["x"])
+		y = float(data["y"])
 
 
 	pass

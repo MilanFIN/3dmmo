@@ -71,6 +71,12 @@ func setAction(a):
 func setActionTarget(target):
 	actionTarget = target
 
+func forcePosition(x, y):
+	translation.x = float(x)
+	translation.z = float(y)
+	state = "idle"
+
+
 func _on_hud_mouse_entered():
 	var camera = get_node("./Camera")
 	camera.disableClick()

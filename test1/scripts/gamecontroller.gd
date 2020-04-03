@@ -139,10 +139,16 @@ func handleMessage(message):
 							otherRoot.add_child(other_instance)
 							print("lisätään")
 				#remove nodes that have disconnected
+				"""
 				for i in range(others.size() - 1, -1, -1):
 					if (not others[i].name in relevant):
 						otherRoot.remove_child(others[i])
 						print("poistetaan") 
+				"""
+				for i in others:
+					if (not i.name in relevant):
+						otherRoot.remove_child(i)
+						i.free()
 				#update the info on children
 				others = otherRoot.get_children()
 				#handle stuff regarding other players
@@ -160,6 +166,10 @@ func handleMessage(message):
 					player.setActionTarget("")
 					player.setAction(false)
 					print(playerData)
+				if (playerData["state"] == "forceidle"):
+					var player = get_node("./level/playership")
+					print("forcing position")
+					player.forcePosition(playerData["x"], playerData["y"])
 
 
 
@@ -170,8 +180,10 @@ func handleMessage(message):
 				var mapRoot = get_node("./level/StaticMap")
 				var mapObjects = mapRoot.get_children()
 				for n in mapObjects:
-					mapObjects.remove_child(n)
+					mapRoot.remove_child(n)
 					n.free()
+					
+					
 				var objects = parse_json(message["data"])
 				for o in objects:
 					var type = objects[o]["type"]

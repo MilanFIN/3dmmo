@@ -4,8 +4,8 @@ class GameObject():
 	def __init__(self, properties):
 		#map specific data, unique
 		self.type = properties["type"]
-		self.x = properties["x"]
-		self.y = properties["y"]
+		self.x = int(properties["x"])
+		self.y = int(properties["y"])
 
 		self.config = configparser.ConfigParser()
 		data = {}
@@ -19,6 +19,11 @@ class GameObject():
 		self.block = data["block"]
 		self.name = data["name"]
 		self.action = data["action"]
+
+		if (self.action == "changemap"):
+			self.targetMap = data["targetmap"]
+			self.exitX = data["exitx"]
+			self.exitY = data["exity"]
 
 
 		self.data = {}
