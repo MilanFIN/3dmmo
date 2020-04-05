@@ -51,7 +51,7 @@ func _physics_process(delta):
 
 func moveTo(targetLocation):
 	var meshNode = get_node("./PlayerMesh")
-	var forward = -meshNode.get_global_transform().basis.z
+	var forward = meshNode.get_global_transform().basis.z
 	forward = Vector2(forward.x, forward.z).normalized()
 
 	#translation arvot on kerrottu -1:llä???
