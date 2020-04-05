@@ -14,16 +14,25 @@ class GameObject():
 			sections = self.config.sections()
 			data = dict(self.config.items(sections[0]))
 
-		#object specific data, per object
+		#data that every object should have
 		self.radius = data["radius"]
 		self.block = data["block"]
 		self.name = data["name"]
 		self.action = data["action"]
 
+		#if object has an action, it has a minimum distance to activate
+		if (self.action != "none"):
+			self.actionDistance = int(data["actiondistance"])
+
+		#details that are specific to the action type
 		if (self.action == "changemap"):
 			self.targetMap = data["targetmap"]
 			self.exitX = data["exitx"]
 			self.exitY = data["exity"]
+		
+		elif (self.action == "mine"):
+			self.probability = float(data["probability"])
+			self.drop = data["drop"]
 
 
 		self.data = {}

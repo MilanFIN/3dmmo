@@ -2,6 +2,8 @@
 from multiprocessing import Process, Queue
 import time
 import uuid
+import random
+
 from player import *
 from gamemap import *
 
@@ -98,14 +100,23 @@ class GameLogic():
 				target = self.maps[player.getMapId()].getObjectById(player.getAction())
 				deltaX = abs(target.x - player.x)
 				deltaY = abs(target.y - player.y)
-				if (deltaX + deltaY < 30):
-					player.setAction(None)
+				if (deltaX + deltaY < target.actionDistance):
 					player.resetActionTime()
 
 					actionType = target.action
 					if (actionType == "changemap"):
 						player.setMap(target.targetMap)
 						player.forcePosition(target.exitX, target.exitY)
+						player.setAction(None)
+
+					if (actionType == "mine"):
+						if (random.random() < target.probability):
+							print("MINING")
+							player.setAction(None)
+
+
+						else:
+							print("fail")
 
 
 
