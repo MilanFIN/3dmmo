@@ -27,12 +27,12 @@ func _physics_process(delta):
 	#print(state)
 
 	if (state == "idle"):
-		#translation.x = x
-		#translation.z = y
+		translation.x = x
+		translation.z = y
 		pass
 	if (state == "turning"):
-		#translation.x = x
-		#translation.z = y
+		translation.x = x
+		translation.z = y
 		var difference = angle - targetAngle
 		if (abs(difference) < 2):
 			state == "idle"
@@ -44,6 +44,7 @@ func _physics_process(delta):
 		
 		var direction = Vector3(target.x-translation.x, 0, target.y-translation.z).normalized()
 		
+
 		move_and_slide(direction*SPEED*delta)
 		var locationDifference = abs(target.x-translation.x)+abs(target.y-translation.z)
 		if (locationDifference < 0.5):
@@ -63,20 +64,22 @@ func updateState(data):
 	state = data["state"]
 	if (state == "idle"):
 		angle = float(data["angle"])
-		if (previousState == "moving" or previousState == "turning"):
-			x = float(data["x"])
-			y = float(data["y"])
-			print("STOPPING")
+		x = float(data["x"])
+		y = float(data["y"])
+
 	elif (state == "turning"):
 		if (targetAngle != data["targetangle"]):
 			angle = float(data["angle"])
 			targetAngle = float(data["targetangle"])
+			x = float(data["x"])
+			y = float(data["y"])
 	elif (state == "moving"):
 		angle = float(data["angle"])
 		var newTarget = Vector2(data["targetx"],data["targety"])
+		x = float(data["x"])
+		y = float(data["y"])
 		if (target != newTarget):
-			x = float(data["x"])
-			y = float(data["y"])
+
 			target = newTarget
 	
 	if ("override" in data):
