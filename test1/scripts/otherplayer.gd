@@ -63,7 +63,7 @@ func updateState(data):
 	state = data["state"]
 	if (state == "idle"):
 		angle = float(data["angle"])
-		if (previousState == "moving"):
+		if (previousState == "moving" or previousState == "turning"):
 			x = float(data["x"])
 			y = float(data["y"])
 			print("STOPPING")
@@ -78,11 +78,11 @@ func updateState(data):
 			x = float(data["x"])
 			y = float(data["y"])
 			target = newTarget
-	elif (state == "forceidle"):
-		state = "idle"
-		angle = float(data["angle"])
+	
+	if ("override" in data):
 		x = float(data["x"])
 		y = float(data["y"])
+
 
 
 	pass

@@ -166,10 +166,11 @@ func handleMessage(message):
 					player.setActionTarget("")
 					player.setAction(false)
 					print(playerData)
-				if (playerData["state"] == "forceidle"):
+				if ("override" in playerData):
 					var player = get_node("./level/playership")
-					print("forcing position")
-					player.forcePosition(playerData["x"], playerData["y"])
+					print("forcing state")
+					player.forceState(playerData["state"], playerData["x"], playerData["y"])
+
 
 
 

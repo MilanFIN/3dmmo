@@ -106,18 +106,15 @@ class GameLogic():
 					actionType = target.action
 					if (actionType == "changemap"):
 						player.setMap(target.targetMap)
-						player.forcePosition(target.exitX, target.exitY)
+						player.forceState("idle", target.exitX, target.exitY)
 						player.setAction(None)
 
 					if (actionType == "mine"):
 						if (random.random() < target.probability):
 							print("MINING")
+							player.forceState("idle")
 							player.setAction(None)
-
-
-						else:
-							print("fail")
-
+						
 
 
 		#make a list of each players restricted gamestate, player specific stuff would be added later
@@ -143,7 +140,9 @@ class GameLogic():
 			
 			if (player.ActionAcknowleged == True):
 				playerState["ackaction"] = "1"
-				player.ActionAcknowleged = False
+			
+			if (player.overrideState == True):
+				playerState["override"] = "1"
 
 			playerStates[player.username] = playerState
 

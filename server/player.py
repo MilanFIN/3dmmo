@@ -7,6 +7,7 @@ class Player():
 		self.x = 0
 		self.y = 0
 		self.state = "idle"
+		self.overrideState = False
 		self.angle = 0
 		self.targetAngle = 0
 		self.targetX = 0
@@ -16,9 +17,9 @@ class Player():
 		self.ActionAcknowleged = False
 
 		self.actionTarget = None
+		
 
 		self.lastActionTime = time.clock()
-		print(self.lastActionTime)
 	def getMapId(self):
 		return self.map
 	def hasValidMap(self):
@@ -30,8 +31,7 @@ class Player():
 		self.mapValid = False
 	def tickDone(self):
 		self.ActionAcknowleged = False
-		if (self.state == "forceidle"):
-			self.state = "idle"
+		self.overrideState = False
 	def setAction(self,targetId):
 		self.actionTarget = targetId
 	def getAction(self):
@@ -41,7 +41,10 @@ class Player():
 	def getLastActionTime(self):
 		return self.lastActionTime
 
-	def forcePosition(self, x, y):
-		self.x = x
-		self.y = y
-		self.state = "forceidle"
+	def forceState(self, state, x = None, y = None):
+		if (x != None):
+			self.x = x
+		if (y != None):
+			self.y = y
+		self.state = "state"
+		self.overrideState = True

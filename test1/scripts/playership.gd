@@ -71,10 +71,12 @@ func setAction(a):
 func setActionTarget(target):
 	actionTarget = target
 
-func forcePosition(x, y):
-	translation.x = float(x)
-	translation.z = float(y)
-	state = "idle"
+func forceState(newState, x = null, y = null):
+	if (x != null):
+		translation.x = float(x)
+	if (y != null):
+		translation.z = float(y)
+	state = newState
 
 
 func _on_hud_mouse_entered():
