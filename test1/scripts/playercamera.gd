@@ -107,16 +107,16 @@ func _input(event):
 						var actionTarget = i.name
 						if (actionType != "none"):
 							pass
-							get_parent().setAction(true)
-							get_parent().setActionTarget(actionTarget)
+							get_parent().setNextAction(true)
+							get_parent().setNextActionTarget(actionTarget)
 							nodeClicked = true
 							break
 
 
 
 				if (not nodeClicked):
-					get_parent().setActionTarget("")
-					get_parent().setAction(false)
+					get_parent().setNextActionTarget("")
+					get_parent().setNextAction(false)
 					
 				var up = Vector3(0,1,0)
 				position3D = -position3D

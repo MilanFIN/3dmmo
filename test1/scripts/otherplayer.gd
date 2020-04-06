@@ -25,14 +25,16 @@ func _physics_process(delta):
 	var meshNode = get_node("./Mesh")
 	meshNode.rotation.y = deg2rad(angle)
 	#print(state)
+	if (x != null and y != null):
+		translation.x = x
+		translation.z = y
+		x = null
+		y = null
 
 	if (state == "idle"):
-		translation.x = x
-		translation.z = y
 		pass
 	if (state == "turning"):
-		translation.x = x
-		translation.z = y
+
 		var difference = angle - targetAngle
 		if (abs(difference) < 2):
 			state == "idle"
@@ -76,10 +78,10 @@ func updateState(data):
 	elif (state == "moving"):
 		angle = float(data["angle"])
 		var newTarget = Vector2(data["targetx"],data["targety"])
-		x = float(data["x"])
-		y = float(data["y"])
-		if (target != newTarget):
 
+		if (target != newTarget):
+			x = null
+			y = null
 			target = newTarget
 	
 	if ("override" in data):

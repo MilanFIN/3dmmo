@@ -14,7 +14,8 @@ class Player():
 		self.targetY = 0
 		self.map = "0"
 		self.mapValid = False
-		self.ActionAcknowleged = False
+		self.actionAcknowleged = None
+		self.acknowlegedTarget = None
 
 		self.actionTarget = None
 		
@@ -30,7 +31,7 @@ class Player():
 		self.map = mapId
 		self.mapValid = False
 	def tickDone(self):
-		self.ActionAcknowleged = False
+		self.actionAcknowleged = None
 		self.overrideState = False
 	def setAction(self,targetId):
 		self.actionTarget = targetId
@@ -46,5 +47,8 @@ class Player():
 			self.x = x
 		if (y != None):
 			self.y = y
-		self.state = "state"
+		self.state = state
 		self.overrideState = True
+
+	def ackAction(self, action, target):
+		pass

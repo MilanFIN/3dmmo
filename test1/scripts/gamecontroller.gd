@@ -90,12 +90,12 @@ func sendState():
 		status["y"] = str(player.translation.z)
 		status["targetx"] = str(player.target.x)
 		status["targety"] = str(player.target.y)
-	
+
 	#figure out state of acting?
 
-	if (player.action):
+	if (player.nextAction):
 		#print(player.actionTarget)
-		status["acttarget"] = player.actionTarget
+		status["acttarget"] = player.nextActionTarget
 	
 	
 	ws.get_peer(1).put_packet(JSON.print(status).to_utf8())
@@ -163,9 +163,10 @@ func handleMessage(message):
 				var playerData = relevant[username]
 				if ("ackaction" in playerData):
 					var player = get_node("./level/playership")
-					player.setActionTarget("")
-					player.setAction(false)
-					print(playerData)
+					print(playerData["ackaction"])
+					player.setNextActionTarget("")
+					player.setNextAction(false)
+
 				if ("override" in playerData):
 					var player = get_node("./level/playership")
 					print("forcing state")

@@ -88,7 +88,7 @@ class GameLogic():
 						timeDiff = time.clock() - player.getLastActionTime()
 						if (timeDiff > 1):
 							player.setAction(targetId)
-					player.ActionAcknowleged = True
+						player.actionAcknowleged = target.action
 
 
 		self.gameMessages = {}	
@@ -138,9 +138,9 @@ class GameLogic():
 				playerState["targety"] = player.targetY
 				playerState["angle"] = player.angle
 			
-			if (player.ActionAcknowleged == True):
-				playerState["ackaction"] = "1"
-			
+			if (player.actionAcknowleged != None):
+				playerState["ackaction"] = player.actionAcknowleged
+				playerState["acktarget"] = "?"
 			if (player.overrideState == True):
 				playerState["override"] = "1"
 

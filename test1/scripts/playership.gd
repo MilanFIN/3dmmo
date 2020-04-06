@@ -10,8 +10,8 @@ var difference = 0 #difference between current angle and goal
 var state = "idle" #idle, turning, moving
 var angle = 0
 var targetAngle = 0
-var action = false
-var actionTarget = ""
+var nextAction = false
+var nextActionTarget = ""
 
 func _ready():
 	pass
@@ -65,11 +65,11 @@ func moveTo(targetLocation):
 	
 	targetAngle = angle - difference
 	
-func setAction(a):
-	action = a
+func setNextAction(a):
+	nextAction = a
 	
-func setActionTarget(target):
-	actionTarget = target
+func setNextActionTarget(target):
+	nextActionTarget = target
 
 func forceState(newState, x = null, y = null):
 	if (x != null):
