@@ -117,6 +117,7 @@ func _input(event):
 				if (not nodeClicked):
 					get_parent().setNextActionTarget("")
 					get_parent().setNextAction(false)
+					get_parent().clearCurrentAction()
 					
 				var up = Vector3(0,1,0)
 				position3D = -position3D

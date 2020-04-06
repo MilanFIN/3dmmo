@@ -164,12 +164,19 @@ func handleMessage(message):
 				if ("ackaction" in playerData):
 					var player = get_node("./level/playership")
 					print(playerData["ackaction"])
+					print(playerData["acktarget"])
+					
+					if (playerData["ackaction"] == "mine"):
+						print("MINING: ", playerData["acktarget"])
+						player.setCurrentAction("mine")
+						
+					
 					player.setNextActionTarget("")
 					player.setNextAction(false)
 
 				if ("override" in playerData):
 					var player = get_node("./level/playership")
-					print("forcing state")
+					print("stopped action")
 					player.forceState(playerData["state"], playerData["x"], playerData["y"])
 
 

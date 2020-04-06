@@ -51,4 +51,6 @@ class Player():
 		self.overrideState = True
 
 	def ackAction(self, action, target):
+		self.actionAcknowleged = action
+		self.acknowlegedTarget = target
 		pass

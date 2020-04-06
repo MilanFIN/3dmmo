@@ -89,6 +89,7 @@ class GameLogic():
 						if (timeDiff > 1):
 							player.setAction(targetId)
 						player.actionAcknowleged = target.action
+						player.acknowlegedTarget = targetId
 
 
 		self.gameMessages = {}	
@@ -140,7 +141,7 @@ class GameLogic():
 			
 			if (player.actionAcknowleged != None):
 				playerState["ackaction"] = player.actionAcknowleged
-				playerState["acktarget"] = "?"
+				playerState["acktarget"] = player.acknowlegedTarget
 			if (player.overrideState == True):
 				playerState["override"] = "1"
 

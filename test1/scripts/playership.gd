@@ -12,6 +12,7 @@ var angle = 0
 var targetAngle = 0
 var nextAction = false
 var nextActionTarget = ""
+var currentAction = null
 
 func _ready():
 	pass
@@ -70,6 +71,12 @@ func setNextAction(a):
 	
 func setNextActionTarget(target):
 	nextActionTarget = target
+	
+func setCurrentAction(a):
+	currentAction = a
+
+func clearCurrentAction():
+	currentAction = null
 
 func forceState(newState, x = null, y = null):
 	if (x != null):
