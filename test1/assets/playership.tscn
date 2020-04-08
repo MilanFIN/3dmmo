@@ -18,3 +18,5 @@ material/0 = null
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 shape = SubResource( 1 )
+
+[node name="Laser" type="ImmediateGeometry" parent="."]

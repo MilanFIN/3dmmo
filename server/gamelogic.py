@@ -58,38 +58,40 @@ class GameLogic():
 				msg = self.gameMessages[uid]
 				player = self.players[uid]
 				if ("action" in msg):
-					#idling
+					
+					#MOVEMENT
 					if (msg["action"] == "idle" and "angle" in msg and "x" in msg and "y" in msg):
 						player.x = float(msg["x"])
 						player.y = float(msg["y"])
 						player.angle = float(msg["angle"])
 						player.state = "idle"
-						#print("idling")
 					elif (msg["action"] == "turning" and "angle" in msg and "targetangle" in msg):
 						if (player.targetAngle != msg["targetangle"]):
-							player.setAction(None)
+							player.clearNextAction()
 						player.angle = float(msg["angle"])
 						player.targetAngle = float(msg["targetangle"])
 						player.state = "turning"
 					elif (msg["action"] == "moving" and "x" in msg and "y" in msg and "targetx" in msg and "targety" in msg and "angle" in msg):
 						if (player.targetX != msg["targetx"] or player.targetY != msg["targety"]):
-							player.setAction(None)
+							player.clearNextAction()
 						player.x = float(msg["x"])
 						player.y = float(msg["y"])
 						player.targetX = msg["targetx"]
 						player.targetY = msg["targety"]
 						player.angle = msg["angle"]
 						player.state = "moving"
-				if ("acttarget" in msg):
+
+				#SET NEXT ACTIONS TO PLAYERS
+				if ("acttarget" in msg and "actobject" in msg and "acttype" in msg):
 					targetId = msg["acttarget"]
-					mapId = player.getMapId()
-					target = self.maps[mapId].getObjectById(targetId)
-					if (target != None):
-						timeDiff = time.clock() - player.getLastActionTime()
-						if (timeDiff > 1):
-							player.setAction(targetId)
-						player.actionAcknowleged = target.action
-						player.acknowlegedTarget = targetId
+					if (msg["actobject"] == "static"):
+						mapId = player.getMapId()
+						target = self.maps[mapId].getObjectById(targetId)
+						if (target != None):
+							if (target.action == msg["acttype"]):
+								timeDiff = time.clock() - player.getLastActionTime()
+								if (timeDiff > 1):
+									player.setNextAction("static", target.action, targetId)
 
 
 		self.gameMessages = {}	
@@ -97,26 +99,30 @@ class GameLogic():
 		
 		for uid in self.players:
 			player = self.players[uid]
-			if (player.getAction() != None):
-				target = self.maps[player.getMapId()].getObjectById(player.getAction())
-				deltaX = abs(target.x - player.x)
-				deltaY = abs(target.y - player.y)
-				if (deltaX + deltaY < target.actionDistance):
-					player.resetActionTime()
+			if (player.hasNextAction()):
+				if (player.nextActionObjectType == "static"):
 
-					actionType = target.action
-					if (actionType == "changemap"):
-						player.setMap(target.targetMap)
-						player.forceState("idle", target.exitX, target.exitY)
-						player.setAction(None)
-
-					if (actionType == "mine"):
-						if (random.random() < target.probability):
+					target = self.maps[player.getMapId()].getObjectById(player.nextActionTargetId)
+					deltaX = abs(target.x - player.x)
+					deltaY = abs(target.y - player.y)
+					if (deltaX + deltaY < target.actionDistance):
+						player.resetActionTime()
+						actionType = target.action
+						if (actionType == "changemap"):
+							player.setDoneAction("static", actionType, player.nextActionTargetId)
+							player.setMap(target.targetMap)
+							player.forceState("idle", target.exitX, target.exitY)
+							player.clearNextAction()
+						elif (actionType == "mine"):
 							print("MINING")
-							player.forceState("idle")
-							player.setAction(None)
-						
-
+							player.setDoneAction("static", actionType, player.nextActionTargetId)
+							hitOdds = random.random()
+							print(hitOdds, " ", target.probability)
+							print(hitOdds < target.probability)
+							if (hitOdds < target.probability):
+								player.forceState("idle")
+								player.clearNextAction()
+							
 
 		#make a list of each players restricted gamestate, player specific stuff would be added later
 		playerStates = {}
@@ -139,9 +145,10 @@ class GameLogic():
 				playerState["targety"] = player.targetY
 				playerState["angle"] = player.angle
 			
-			if (player.actionAcknowleged != None):
-				playerState["ackaction"] = player.actionAcknowleged
-				playerState["acktarget"] = player.acknowlegedTarget
+			if (player.hasDoneAction()):
+				playerState["actobject"] = player.doneActionObjectType
+				playerState["acttype"] = player.doneActionType
+				playerState["acttarget"] = player.doneActionTargetId
 			if (player.overrideState == True):
 				playerState["override"] = "1"
 

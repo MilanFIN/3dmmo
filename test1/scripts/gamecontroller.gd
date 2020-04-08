@@ -93,9 +93,11 @@ func sendState():
 
 	#figure out state of acting?
 
-	if (player.nextAction):
+	if (player.nextAction()):
 		#print(player.actionTarget)
 		status["acttarget"] = player.nextActionTarget
+		status["actobject"] = player.nextActionObjectType
+		status["acttype"] = player.nextActionType
 	
 	
 	ws.get_peer(1).put_packet(JSON.print(status).to_utf8())
@@ -161,18 +163,13 @@ func handleMessage(message):
 				
 				#handle the player themself
 				var playerData = relevant[username]
-				if ("ackaction" in playerData):
+				if ("actobject" in playerData and "acttype" in playerData and "acttarget" in playerData):
 					var player = get_node("./level/playership")
-					print(playerData["ackaction"])
-					print(playerData["acktarget"])
-					
-					if (playerData["ackaction"] == "mine"):
-						print("MINING: ", playerData["acktarget"])
-						player.setCurrentAction("mine")
-						
-					
-					player.setNextActionTarget("")
-					player.setNextAction(false)
+					player.clearNextAction()
+					player.setCurrentAction(playerData["actobject"], playerData["acttype"], playerData["acttarget"])
+				else:
+					var player = get_node("./level/playership")
+					player.clearCurrentAction()
 
 				if ("override" in playerData):
 					var player = get_node("./level/playership")

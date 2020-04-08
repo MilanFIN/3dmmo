@@ -10,12 +10,18 @@ var difference = 0 #difference between current angle and goal
 var state = "idle" #idle, turning, moving
 var angle = 0
 var targetAngle = 0
-var nextAction = false
+var nextActionType = ""
 var nextActionTarget = ""
-var currentAction = null
+var nextActionObjectType = ""
 
+var currentActionType = ""
+var currentActionTarget = ""
+var currentActionObjectType = ""
+
+var laserMaterial = SpatialMaterial.new()
 func _ready():
-	pass
+	laserMaterial.flags_unshaded = true
+	laserMaterial.flags_use_point_size = true
 
 	
 
@@ -47,7 +53,25 @@ func _physics_process(delta):
 		var locationDifference = abs(target.x-translation.x)+abs(target.y-translation.z)
 		if (locationDifference < 0.5):
 			state = "idle"
+	
+	if (currentActionType == "mine"):
+		var laser = get_node("./Laser")
+		laserMaterial.albedo_color = Color.orange
+		var targetPos = Vector3(0,0,0)
+		var mapRoot = get_tree().get_root().get_node("gamecontroller/level/StaticMap")
+		if (mapRoot.has_node(currentActionTarget)):
+			var target = mapRoot.get_node(currentActionTarget)
+			targetPos = target.translation - translation
+		laser.set_material_override(laserMaterial)
+		laser.clear()
+		laser.begin(Mesh.PRIMITIVE_LINE_STRIP, null)
+		laser.add_vertex(Vector3(0,0,0))
+		laser.add_vertex(targetPos)
+		laser.end()
 
+	else:
+		var laser = get_node("./Laser")
+		laser.clear()
 
 
 func moveTo(targetLocation):
@@ -65,18 +89,32 @@ func moveTo(targetLocation):
 	target = -Vector2(targetLocation.x, targetLocation.z)
 	
 	targetAngle = angle - difference
-	
-func setNextAction(a):
-	nextAction = a
-	
-func setNextActionTarget(target):
+
+func nextAction():
+	if (nextActionType != "" and nextActionTarget != "" and nextActionObjectType != ""):
+		return true
+	else:
+		return false
+
+func setNextAction(objtype, actiontype, target):
+	nextActionType = actiontype
 	nextActionTarget = target
+	nextActionObjectType = objtype
+
+func clearNextAction():
+	nextActionType = ""
+	nextActionTarget = ""
+	nextActionObjectType = ""
 	
-func setCurrentAction(a):
-	currentAction = a
+func setCurrentAction(objtype, actiontype, target):
+	currentActionType = actiontype
+	currentActionTarget = target
+	currentActionObjectType = objtype
 
 func clearCurrentAction():
-	currentAction = null
+	currentActionType = ""
+	currentActionTarget = ""
+	currentActionObjectType = ""
 
 func forceState(newState, x = null, y = null):
 	if (x != null):

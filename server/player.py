@@ -14,8 +14,16 @@ class Player():
 		self.targetY = 0
 		self.map = "0"
 		self.mapValid = False
-		self.actionAcknowleged = None
-		self.acknowlegedTarget = None
+
+
+		self.nextActionTargetId = ""
+		self.nextActionType = ""
+		self.nextActionObjectType = ""
+
+		self.doneActionTargetId = ""
+		self.doneActionType = ""
+		self.doneActionObjectType = ""
+
 
 		self.actionTarget = None
 		
@@ -31,16 +39,10 @@ class Player():
 		self.map = mapId
 		self.mapValid = False
 	def tickDone(self):
-		self.actionAcknowleged = None
+		self.doneActionTargetId = ""
+		self.doneActionType = ""
+		self.doneActionObjectType = ""
 		self.overrideState = False
-	def setAction(self,targetId):
-		self.actionTarget = targetId
-	def getAction(self):
-		return self.actionTarget
-	def resetActionTime(self):
-		self.lastActionTime = time.clock()
-	def getLastActionTime(self):
-		return self.lastActionTime
 
 	def forceState(self, state, x = None, y = None):
 		if (x != None):
@@ -50,7 +52,40 @@ class Player():
 		self.state = state
 		self.overrideState = True
 
-	def ackAction(self, action, target):
-		self.actionAcknowleged = action
-		self.acknowlegedTarget = target
-		pass
+
+	def hasNextAction(self):
+		if (self.nextActionTargetId != "" and self.nextActionType != "" and self.nextActionObjectType != ""):
+			return True
+		else:
+			return False
+
+	def setNextAction(self, objtype, acttype, targetid):
+		self.nextActionTargetId = targetid
+		self.nextActionType = acttype
+		self.nextActionObjectType = objtype
+
+	def clearNextAction(self):
+		self.nextActionTargetId = ""
+		self.nextActionType = ""
+		self.nextActionObjectType = ""
+
+
+	def hasDoneAction(self):
+		if (self.doneActionTargetId != "" and self.doneActionType != "" and self.doneActionObjectType != ""):
+			return True
+		else:
+			return False
+
+	def setDoneAction(self, objtype, acttype, targetid):
+		self.doneActionTargetId = targetid
+		self.doneActionType = acttype
+		self.doneActionObjectType = objtype
+
+
+	def resetActionTime(self):
+		self.lastActionTime = time.clock()
+	def getLastActionTime(self):
+		return self.lastActionTime
+
+
+
