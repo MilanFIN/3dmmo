@@ -62,6 +62,7 @@ func _physics_process(delta):
 		if (mapRoot.has_node(currentActionTarget)):
 			var target = mapRoot.get_node(currentActionTarget)
 			targetPos = target.translation - translation
+		print(laser.translation)
 		laser.set_material_override(laserMaterial)
 		laser.clear()
 		laser.begin(Mesh.PRIMITIVE_LINE_STRIP, null)

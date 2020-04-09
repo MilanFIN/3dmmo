@@ -16,7 +16,7 @@ script = ExtResource( 2 )
 mesh = ExtResource( 1 )
 material/0 = null
 
+[node name="Laser" type="ImmediateGeometry" parent="."]
+
 [node name="CollisionShape" type="CollisionShape" parent="."]
 shape = SubResource( 1 )
-
-[node name="Laser" type="ImmediateGeometry" parent="."]

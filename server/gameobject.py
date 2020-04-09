@@ -9,10 +9,11 @@ class GameObject():
 
 		self.config = configparser.ConfigParser()
 		data = {}
-		with open("./objects/"+self.type+".cfg") as fp:
-			self.config.readfp(fp)
-			sections = self.config.sections()
-			data = dict(self.config.items(sections[0]))
+
+		self.config.read_file(open("./objects/"+self.type+".cfg"))
+
+		sections = self.config.sections()
+		data = dict(self.config.items(sections[0]))
 
 		#data that every object should have
 		self.radius = data["radius"]

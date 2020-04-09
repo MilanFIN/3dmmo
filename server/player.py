@@ -1,5 +1,6 @@
 
 import time
+from inventory import *
 
 class Player():
 	def __init__(self, username):
@@ -26,6 +27,9 @@ class Player():
 
 
 		self.actionTarget = None
+
+
+		self.inventory = Inventory()
 		
 
 		self.lastActionTime = time.clock()

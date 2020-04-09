@@ -9,14 +9,13 @@ class GameMap():
 		self.objects = {}
 
 		self.config = configparser.ConfigParser()
+		self.config.read_file(open("./maps/"+name+".cfg"))
 
-		with open("./maps/"+name+".cfg") as fp:
-			self.config.readfp(fp)
-			sections = self.config.sections()
+		sections = self.config.sections()
 
-			for i in sections:
-				obj = GameObject(dict(self.config.items(i)))
-				self.objects[i] = obj
+		for i in sections:
+			obj = GameObject(dict(self.config.items(i)))
+			self.objects[i] = obj
 
 	def getMap(self):
 		mapData = {}

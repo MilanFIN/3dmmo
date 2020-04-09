@@ -6,6 +6,7 @@ import random
 
 from player import *
 from gamemap import *
+from itemhandler import *
 
 
 TICKRATE = 0.5
@@ -114,12 +115,14 @@ class GameLogic():
 							player.forceState("idle", target.exitX, target.exitY)
 							player.clearNextAction()
 						elif (actionType == "mine"):
-							print("MINING")
 							player.setDoneAction("static", actionType, player.nextActionTargetId)
 							hitOdds = random.random()
-							print(hitOdds, " ", target.probability)
-							print(hitOdds < target.probability)
 							if (hitOdds < target.probability):
+								drop = target.drop
+								if (itemhandler.itemExists(drop)):
+									addedItem = player.inventory.addItem(drop)
+									if (not addedItem):
+										print("inventory full")
 								player.forceState("idle")
 								player.clearNextAction()
 							
