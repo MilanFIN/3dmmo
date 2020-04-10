@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://assets/playership.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/playership.gd" type="Script" id=2]
 [ext_resource path="res://scripts/sendMessage.gd" type="Script" id=3]
 [ext_resource path="res://scripts/messageBox.gd" type="Script" id=4]
+[ext_resource path="res://scripts/Inventory.gd" type="Script" id=5]
 
 [sub_resource type="BoxShape" id=1]
 
@@ -41,6 +42,26 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Inventory" type="Panel" parent="HUD"]
+margin_left = 1080.0
+margin_top = 520.0
+margin_right = 1280.0
+margin_bottom = 720.0
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Grid" type="GridContainer" parent="HUD/Inventory"]
+margin_left = 1080.0
+margin_top = 520.0
+margin_right = 1280.0
+margin_bottom = 720.0
+columns = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="MessageBox" type="Label" parent="HUD"]
 margin_top = 496.0
 margin_right = 300.0
@@ -67,6 +88,8 @@ script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="mouse_entered" from="HUD/Inventory" to="playership" method="_on_hud_mouse_entered"]
+[connection signal="mouse_exited" from="HUD/Inventory" to="playership" method="_on_hud_mouse_exited"]
 [connection signal="mouse_entered" from="HUD/MessageBox" to="playership" method="_on_hud_mouse_entered"]
 [connection signal="mouse_exited" from="HUD/MessageBox" to="playership" method="_on_hud_mouse_exited"]
 [connection signal="mouse_entered" from="HUD/InputField" to="playership" method="_on_hud_mouse_entered"]

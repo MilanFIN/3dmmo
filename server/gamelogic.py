@@ -39,12 +39,13 @@ class GameLogic():
 		#go through all messages and create the players, still needs delete?
 		for uid in self.accountMessages:
 			if (uid not in self.players):
-				if (self.accountMessages[uid]["auth"] == "accepted"):
-					#print("creating a player")
-					data = self.accountMessages[uid]["data"]
-					if ("username" in data):
-						player = Player(data["username"])
-						self.players[uid] = player
+				if ("auth" in self.accountMessages[uid]):
+					if (self.accountMessages[uid]["auth"] == "accepted"):
+						#print("creating a player")
+						data = self.accountMessages[uid]["data"]
+						if ("username" in data):
+							player = Player(data["username"])
+							self.players[uid] = player
 			else:
 				if (self.accountMessages[uid]["action"] == "logout"):
 					self.players.pop(self.accountMessages[uid]["user"], None)
@@ -127,7 +128,7 @@ class GameLogic():
 								player.clearNextAction()
 							
 
-		#make a list of each players restricted gamestate, player specific stuff would be added later
+		#make a list of each players gamestate
 		playerStates = {}
 		for uid in self.players:
 			player = self.players[uid]
@@ -154,6 +155,8 @@ class GameLogic():
 				playerState["acttarget"] = player.doneActionTargetId
 			if (player.overrideState == True):
 				playerState["override"] = "1"
+			if (player.inventory.hasChanged()):
+				playerState["inv"] = player.inventory.getItems()
 
 			playerStates[player.username] = playerState
 

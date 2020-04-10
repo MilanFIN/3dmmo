@@ -162,17 +162,20 @@ func handleMessage(message):
 				
 				
 				#handle the player themself
+				var player = get_node("./level/playership")
+				var inventory = get_node("./level/HUD/Inventory")
 				var playerData = relevant[username]
 				if ("actobject" in playerData and "acttype" in playerData and "acttarget" in playerData):
-					var player = get_node("./level/playership")
 					player.clearNextAction()
 					player.setCurrentAction(playerData["actobject"], playerData["acttype"], playerData["acttarget"])
 				else:
-					var player = get_node("./level/playership")
 					player.clearCurrentAction()
+				if ("inv" in playerData):
+					inventory.setItems(playerData["inv"])
+					#print("INV CHANGE", playerData["inv"])
 
 				if ("override" in playerData):
-					var player = get_node("./level/playership")
+
 					print("stopped action")
 					player.forceState(playerData["state"], playerData["x"], playerData["y"])
 

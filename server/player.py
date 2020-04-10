@@ -47,6 +47,7 @@ class Player():
 		self.doneActionType = ""
 		self.doneActionObjectType = ""
 		self.overrideState = False
+		self.inventory.tickDone()
 
 	def forceState(self, state, x = None, y = None):
 		if (x != None):
