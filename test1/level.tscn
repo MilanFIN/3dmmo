@@ -44,7 +44,7 @@ __meta__ = {
 
 [node name="Inventory" type="Panel" parent="HUD"]
 margin_left = 1080.0
-margin_top = 520.0
+margin_top = 470.0
 margin_right = 1280.0
 margin_bottom = 720.0
 script = ExtResource( 5 )
@@ -53,10 +53,13 @@ __meta__ = {
 }
 
 [node name="Grid" type="GridContainer" parent="HUD/Inventory"]
-margin_left = 1080.0
-margin_top = 520.0
-margin_right = 1280.0
-margin_bottom = 720.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 200.0
+margin_bottom = 250.0
+rect_min_size = Vector2( 192, 242 )
+custom_constants/vseparation = 8
+custom_constants/hseparation = 8
 columns = 4
 __meta__ = {
 "_edit_use_anchors_": false
