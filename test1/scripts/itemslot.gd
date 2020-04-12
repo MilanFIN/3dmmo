@@ -24,6 +24,11 @@ func setItem(itemname, iconpath):
 	add_child(item)
 	print(item.name)
 
+func clearItem():
+	for i in get_children():
+		remove_child(i)
+		i.free()
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass

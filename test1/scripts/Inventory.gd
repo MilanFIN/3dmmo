@@ -32,10 +32,13 @@ func _ready():
 
 
 func setItems(items):
-	print("items:")
-	for i in items:
-		print(i)
-	print("endofitems")
+	
+	for i in itemSlots:
+		i.clearItem()
+	for i in range (0, len(items)):
+		if (i < MAXSLOTS):
+			itemSlots[i].setItem(items[i], itemIcons[items[i]])
+
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
