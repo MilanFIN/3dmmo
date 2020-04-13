@@ -20,8 +20,8 @@ class GameLogic():
 		self.accountMessages = {}
 
 		self.maps = {}
-		self.maps["0"] = GameMap("0")
-		self.maps["1"] = GameMap("1")
+		self.maps["0"] = StaticMap("0")
+		self.maps["1"] = StaticMap("1")
 
 
 	def newMessage(self, message):
@@ -88,7 +88,7 @@ class GameLogic():
 					targetId = msg["acttarget"]
 					if (msg["actobject"] == "static"):
 						mapId = player.getMapId()
-						target = self.maps[mapId].getObjectById(targetId)
+						target = self.maps[mapId].getStaticObjectById(targetId)
 						if (target != None):
 							if (target.action == msg["acttype"]):
 								timeDiff = time.clock() - player.getLastActionTime()
@@ -106,7 +106,7 @@ class GameLogic():
 			if (player.hasNextAction()):
 				if (player.nextActionObjectType == "static"):
 
-					target = self.maps[player.getMapId()].getObjectById(player.nextActionTargetId)
+					target = self.maps[player.getMapId()].getStaticObjectById(player.nextActionTargetId)
 					deltaX = abs(target.x - player.x)
 					deltaY = abs(target.y - player.y)
 					if (deltaX + deltaY < target.actionDistance):

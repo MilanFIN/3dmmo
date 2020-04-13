@@ -1,6 +1,6 @@
 import configparser
 
-class GameObject():
+class StaticObject():
 	def __init__(self, properties):
 		#map specific data, unique
 		self.type = properties["type"]
@@ -10,7 +10,7 @@ class GameObject():
 		self.config = configparser.ConfigParser()
 		data = {}
 
-		self.config.read_file(open("./objects/"+self.type+".cfg"))
+		self.config.read_file(open("./objects/static/"+self.type+".cfg"))
 
 		sections = self.config.sections()
 		data = dict(self.config.items(sections[0]))
