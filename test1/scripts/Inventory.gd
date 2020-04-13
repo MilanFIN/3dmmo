@@ -37,7 +37,8 @@ func setItems(items):
 		i.clearItem()
 	for i in range (0, len(items)):
 		if (i < MAXSLOTS):
-			itemSlots[i].setItem(items[i], itemIcons[items[i]])
+			if (items[i] != ""):
+				itemSlots[i].setItem(items[i], itemIcons[items[i]])
 
 
 
