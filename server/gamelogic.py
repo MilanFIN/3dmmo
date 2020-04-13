@@ -94,7 +94,9 @@ class GameLogic():
 								timeDiff = time.clock() - player.getLastActionTime()
 								if (timeDiff > 1):
 									player.setNextAction("static", target.action, targetId)
-
+					elif (msg["actobject"] == "inventory"):
+						if (msg["acttarget"].isdigit()):# item index should be a number
+							player.setNextAction("inventory", msg["acttype"], msg["acttarget"])
 
 		self.gameMessages = {}	
 
@@ -126,7 +128,12 @@ class GameLogic():
 										print("inventory full")
 								player.forceState("idle")
 								player.clearNextAction()
-							
+				elif (player.nextActionObjectType == "inventory"):
+					if (player.nextActionType == "drop"):
+						player.setDoneAction("inventory", player.nextActionType, player.nextActionTargetId)
+						player.inventory.removeByIndex(int(player.nextActionTargetId))
+						player.clearNextAction()
+
 
 		#make a list of each players gamestate
 		playerStates = {}

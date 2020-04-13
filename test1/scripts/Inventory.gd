@@ -25,9 +25,7 @@ func _ready():
 		var slot = ItemSlot.new()
 		ItemGrid.add_child(slot)
 		itemSlots.push_back(slot)
-		
-
-		slot.setItem("uranium", itemIcons["uranium"])
+		slot.name = str(i)
 
 
 

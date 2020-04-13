@@ -4,7 +4,7 @@ class Inventory():
 	def __init__(self):
 		self.MAXSIZE = 20
 		self.items = [""] * self.MAXSIZE
-		self.changed = False
+		self.changed = True
 	def getItems(self):
 		return self.items
 	def addItem(self, item):
@@ -16,10 +16,18 @@ class Inventory():
 
 		return False
 
-	def removeItem(self, item):
+	def removeByName(self, item):
 		for i in range (len(items)):
 			if (self.items[i] == item):
 				self.items[i] = ""
+				self.changed = True
+				return True
+		return False
+	def removeByIndex(self, index):
+		print(index)
+		if (index < self.MAXSIZE):
+			if (self.items[index] != ""):
+				self.items[index] = ""
 				self.changed = True
 				return True
 		return False

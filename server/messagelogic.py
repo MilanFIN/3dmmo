@@ -14,6 +14,7 @@ class MessageLogic():
 
 	def newMessage(self, message):
 		if ("user" in message):
+			
 			if (message["user"] not in self.players and "auth" in message):
 				self.accountMessages[message["user"]] = message
 			elif (message["action"] == "logout"):
@@ -27,11 +28,12 @@ class MessageLogic():
 
 		for uid in self.accountMessages:
 			if (uid not in self.players):
-				if (self.accountMessages[uid]["auth"] == "accepted"):
-					data = self.accountMessages[uid]["data"]
-					if ("username" in data):
-						player = data["username"]
-						self.players[uid] = player
+				if ("auth" in self.accountMessages[uid]):
+					if (self.accountMessages[uid]["auth"] == "accepted"):
+						data = self.accountMessages[uid]["data"]
+						if ("username" in data):
+							player = data["username"]
+							self.players[uid] = player
 			else:
 				if (self.accountMessages[uid]["action"] == "logout"):
 					self.players.pop(self.accountMessages[uid]["user"], None)
