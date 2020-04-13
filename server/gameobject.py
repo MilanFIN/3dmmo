@@ -1,11 +1,23 @@
 import configparser
 
-class StaticObject():
+class GameObject():
 	def __init__(self, properties):
-		#map specific data, unique
 		self.type = properties["type"]
 		self.x = int(properties["x"])
 		self.y = int(properties["y"])
+
+		self.data = {}
+
+	def getData(self):
+		return self.data
+
+
+class StaticObject(GameObject):
+	def __init__(self, properties):
+
+		super().__init__(properties)
+
+		#map specific data, unique
 
 		self.config = configparser.ConfigParser()
 		data = {}
@@ -43,5 +55,9 @@ class StaticObject():
 		self.data["action"] = self.action
 
 
-	def getData(self):
-		return self.data
+
+
+class DynamicObject(GameObject):
+	def __init__(self, properties):
+		super().__init__(properties)
+		pass
