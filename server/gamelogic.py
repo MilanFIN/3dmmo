@@ -20,8 +20,8 @@ class GameLogic():
 		self.accountMessages = {}
 
 		self.maps = {}
-		self.maps["0"] = StaticMap("0")
-		self.maps["1"] = StaticMap("1")
+		self.maps["0"] = GameMap("0")
+		self.maps["1"] = GameMap("1")
 
 
 	def newMessage(self, message):
@@ -54,7 +54,7 @@ class GameLogic():
 		self.accountMessages = {}
 
 
-		#go through all messages, and change their state accordingly
+		#go through all messages, change player positions and change next actions for players
 		for uid in self.gameMessages:
 			if (uid in self.players):
 				msg = self.gameMessages[uid]
@@ -101,6 +101,7 @@ class GameLogic():
 		self.gameMessages = {}	
 
 		
+		# go throught players and handle each players action
 		for uid in self.players:
 			player = self.players[uid]
 			if (player.hasNextAction()):
@@ -135,7 +136,16 @@ class GameLogic():
 						player.clearNextAction()
 
 
-		#make a list of each players gamestate
+		#update dynamic objects
+		for m in self.maps:
+			dobjs = self.maps[m].getDynamicObjects()
+			for d in dobjs:
+				d.update()
+
+		
+
+
+		#make a dict with each player's gamestate
 		playerStates = {}
 		for uid in self.players:
 			player = self.players[uid]
@@ -167,14 +177,17 @@ class GameLogic():
 
 			playerStates[player.username] = playerState
 
+		#set the data to be sent to players
 		result = []
 		for uid in self.players:
-			data = {}
+			player = self.players[uid]
+			playerdata = {}
 			for i in playerStates:
-				mapId = self.players[uid].getMapId()
+				mapId = player.getMapId()
 				if (playerStates[i]["mapId"] == mapId):
-					data[i] =  playerStates[i]
-			res = {"user":uid, "data":data, "type":"game"}
+					playerdata[i] =  playerStates[i]
+			dynamicdata = self.maps[player.getMapId()].getDynamicMap()
+			res = {"user":uid, "data":{"playerdata":playerdata, "dynamicdata":dynamicdata}, "type":"game"}
 			result.append(res)
 			
 			#handle map changes/initialization with the default map
@@ -183,7 +196,7 @@ class GameLogic():
 				print("not valid")
 				player.validateMap()
 				mapId = player.getMapId()
-				mapJSON = self.maps[mapId].getMap()
+				mapJSON = self.maps[mapId].getStaticMap()
 				res1 = {"user":uid, "data":mapJSON, "type":"map"}
 				result.append(res1)
 
@@ -216,5 +229,5 @@ def startGameLogic(inQue, outQue):
 			for i in outbound:
 				outQue.put(i)
 		if (idle):
-			time.sleep(TICKRATE)
+			time.sleep(TICKRATE/10)
 

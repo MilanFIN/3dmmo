@@ -20,7 +20,7 @@ class StaticObject(GameObject):
 		#map specific data, unique
 
 		self.config = configparser.ConfigParser()
-		data = {}
+		#data = {}
 
 		self.config.read_file(open("./objects/static/"+self.type+".cfg"))
 
@@ -60,4 +60,34 @@ class StaticObject(GameObject):
 class DynamicObject(GameObject):
 	def __init__(self, properties):
 		super().__init__(properties)
+
+
+
+		self.config = configparser.ConfigParser()
+		data = {}
+
+		self.config.read_file(open("./objects/dynamic/"+self.type+".cfg"))
+
+		sections = self.config.sections()
+		data = dict(self.config.items(sections[0]))
+
+		#data that every object should have
+		self.name = data["name"]
+		self.action = data["action"]
+		self.speed = data["speed"]
+		self.moving = False
+		if ("waypoints" in data):
+			self.waypoints = data["waypoints"]
+			self.moving = True
+
+		self.data = {}
+		self.data["x"] = self.x
+		self.data["y"] = self.y
+		self.data["type"] = self.type
+		self.data["action"] = self.action
+	
+	def update(self):
+		self.x += 1
+		
+		self.data["x"] += 1
 		pass
