@@ -174,8 +174,27 @@ func handleMessage(message):
 							print("stopped action")
 							player.forceState(playerData["state"], playerData["x"], playerData["y"])
 					if ("dynamicdata" in message["data"]):
-						print("DYNAMIC DATA")
+						var relevant = parse_json(message["data"]["dynamicdata"])
+						var dynamicRoot = get_node("./level/DynamicMap")
+						var dynamics = dynamicRoot.get_children()
+						var existingNames = []
+						for o in dynamics:
+							existingNames.append(o.name)
+						for object in relevant.keys():
 
+							if (not object in existingNames):
+								var dynamicobject = load("res://assets/dynamicobjects/pirate1.tscn")
+								var object_instance = dynamicobject.instance()
+								object_instance.set_name(object)
+								dynamicRoot.add_child(object_instance)
+						#remove disconnected nodes
+						for i in dynamics:
+							if (not i.name in relevant.keys()):
+								dynamicRoot.remove_child(i)
+								i.free()
+
+					if (not "dynamicdata" in message["data"]):
+						print("NO OBJECTS")
 
 			elif (message["type"] == "message"):
 				var messageBox = get_node("./level/HUD/MessageBox")

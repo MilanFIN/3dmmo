@@ -190,7 +190,7 @@ class GameLogic():
 			res = {"user":uid, "data":{"playerdata":playerdata, "dynamicdata":dynamicdata}, "type":"game"}
 			result.append(res)
 			
-			#handle map changes/initialization with the default map
+			#handle map changes and the player initialization with the default map
 			player = self.players[uid]
 			if (not player.hasValidMap()):
 				print("not valid")
