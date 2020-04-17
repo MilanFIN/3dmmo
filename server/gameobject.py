@@ -1,4 +1,5 @@
 import configparser
+import json
 
 class GameObject():
 	def __init__(self, properties):
@@ -75,10 +76,13 @@ class DynamicObject(GameObject):
 		self.name = data["name"]
 		self.action = data["action"]
 		self.speed = data["speed"]
+
+
 		self.moving = False
-		if ("waypoints" in data):
-			self.waypoints = data["waypoints"]
+		if ("waypoints" in properties):
 			self.moving = True
+			self.waypoints = json.loads(properties["waypoints"])
+
 
 		self.data = {}
 		self.data["x"] = self.x
@@ -87,7 +91,9 @@ class DynamicObject(GameObject):
 		self.data["action"] = self.action
 	
 	def update(self):
-		self.x += 1
-		
-		self.data["x"] += 1
-		pass
+		if (self.moving):
+			for w in self.waypoints:
+				print(w)
+			if (self.x < 100):
+				self.x += 0.5
+		self.data["x"] = self.x

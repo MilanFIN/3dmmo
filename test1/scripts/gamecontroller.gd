@@ -181,17 +181,22 @@ func handleMessage(message):
 						for o in dynamics:
 							existingNames.append(o.name)
 						for object in relevant.keys():
-
+							#add objects that don't yet exist
 							if (not object in existingNames):
 								var dynamicobject = load("res://assets/dynamicobjects/pirate1.tscn")
 								var object_instance = dynamicobject.instance()
 								object_instance.set_name(object)
 								dynamicRoot.add_child(object_instance)
-						#remove disconnected nodes
+								object_instance.setPosition(relevant[object]["x"], relevant[object]["y"])
+							
+						#remove disappeared objects
 						for i in dynamics:
 							if (not i.name in relevant.keys()):
 								dynamicRoot.remove_child(i)
 								i.free()
+						#update all still remaining nodes
+						for dynamicobj in dynamicRoot.get_children():
+							dynamicobj.updatePosition(relevant[dynamicobj.name]["x"], relevant[dynamicobj.name]["y"])
 
 					if (not "dynamicdata" in message["data"]):
 						print("NO OBJECTS")
