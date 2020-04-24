@@ -1,11 +1,12 @@
 import configparser
 import json
+import math
 
 class GameObject():
 	def __init__(self, properties):
 		self.type = properties["type"]
-		self.x = int(properties["x"])
-		self.y = int(properties["y"])
+		self.x = float(properties["x"])
+		self.y = float(properties["y"])
 
 		self.data = {}
 
@@ -75,13 +76,22 @@ class DynamicObject(GameObject):
 		#data that every object should have
 		self.name = data["name"]
 		self.action = data["action"]
-		self.speed = data["speed"]
+		self.speed = 0
 
 
 		self.moving = False
+		self.waypoints = []
+		self.targetWaypoint = 0
+
 		if ("waypoints" in properties):
 			self.moving = True
-			self.waypoints = json.loads(properties["waypoints"])
+			self.speed = float(data["speed"])
+			points = json.loads(properties["waypoints"])
+			for w in points:
+				x, y = w.split(",")
+				x = float(x)
+				y = float(y)
+				self.waypoints.append({"x":x, "y":y})
 
 
 		self.data = {}
@@ -92,8 +102,24 @@ class DynamicObject(GameObject):
 	
 	def update(self):
 		if (self.moving):
-			for w in self.waypoints:
-				print(w)
-			if (self.x < 100):
-				self.x += 0.5
-		self.data["x"] = self.x
+			target = self.waypoints[self.targetWaypoint]
+			xDir = target["x"] - self.x
+			yDir = target["y"] - self.y
+			total = math.sqrt(xDir**2 + yDir**2)
+			if (xDir != 0):
+				xDir = xDir/total*self.speed
+			if (yDir != 0):
+				yDir = yDir/total*self.speed
+			self.x += xDir
+			self.y += yDir
+
+			xDiff = abs(self.x - target["x"])
+			yDiff = abs(self.y - target["y"])
+
+			if (xDiff <= abs(xDir) and yDiff <= abs(yDir)):
+				self.targetWaypoint += 1
+				if (self.targetWaypoint == len(self.waypoints)):
+					self.targetWaypoint = 0
+			self.data["x"] = self.x
+			self.data["y"] = self.y
+
