@@ -99,6 +99,7 @@ class DynamicObject(GameObject):
 		self.data["y"] = self.y
 		self.data["type"] = self.type
 		self.data["action"] = self.action
+		self.data["speed"] = self.speed
 	
 	def update(self):
 		if (self.moving):
@@ -117,6 +118,8 @@ class DynamicObject(GameObject):
 			yDiff = abs(self.y - target["y"])
 
 			if (xDiff <= abs(xDir) and yDiff <= abs(yDir)):
+				self.x = target["x"]
+				self.y = target["y"]
 				self.targetWaypoint += 1
 				if (self.targetWaypoint == len(self.waypoints)):
 					self.targetWaypoint = 0
