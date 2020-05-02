@@ -7,6 +7,9 @@ const MAXDISTANCE = 3
 const MAXJERKMULTIPLIER = 5
 const ROTSPEED = 70
 var speed = 0
+var radius = 1
+var actionType = ""
+
 var targetX = 0
 var targetY = 0
 # Declare member variables here. Examples:
@@ -67,7 +70,18 @@ func updatePosition(x, y):
 
 func setSpeed(s):
 	speed = float(s) / global.tickrate
+
+func setRadius(r):
+	radius = r
 	
+func getRadius():
+	return radius
+	
+func setAction(a):
+	actionType = a
+
+func action():
+	return actionType
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass

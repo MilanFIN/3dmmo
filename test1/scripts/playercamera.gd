@@ -98,20 +98,30 @@ func _input(event):
 				var nodeClicked = false
 
 
-				var mapRoot = get_tree().get_root().get_node("gamecontroller/level/StaticMap")
-				for i in mapRoot.get_children():
-					var collShape = i.get_node("./CollisionShape")
-					var radius = collShape.shape.radius
-					if((i.translation - position3D).length() < radius):
-						var actionType = i.action()
-						var actionTarget = i.name
-						if (actionType != "none"):
-							pass
-							get_parent().setNextAction("static", actionType, actionTarget)
+				if (not nodeClicked):
+					var mapRoot = get_tree().get_root().get_node("gamecontroller/level/StaticMap")
+					for i in mapRoot.get_children():
+						var collShape = i.get_node("./CollisionShape")
+						var radius = collShape.shape.radius
+						if((i.translation - position3D).length() < radius):
+							var actionType = i.action()
+							var actionTarget = i.name
+							if (actionType != "none"):
+								get_parent().setNextAction("static", actionType, actionTarget)
+								nodeClicked = true
+								break
+
+				if (not nodeClicked):
+					var dynamicRoot = get_tree().get_root().get_node("gamecontroller/level/DynamicMap")
+					for i in dynamicRoot.get_children():
+						var radius = i.getRadius()
+						if ((i.translation - position3D).length()  < radius):
+							var actionType = i.action()
+							var actionTarget = i.name
+							print(actionType, " ", actionTarget)
+							get_parent().setNextAction("dynamic", actionType, actionTarget)
 							nodeClicked = true
 							break
-
-
 
 				if (not nodeClicked):
 					get_parent().clearNextAction()

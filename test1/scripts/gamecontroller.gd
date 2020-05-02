@@ -188,7 +188,8 @@ func handleMessage(message):
 								object_instance.set_name(object)
 								dynamicRoot.add_child(object_instance)
 								object_instance.setPosition(relevant[object]["x"], relevant[object]["y"])
-							
+								object_instance.setSpeed(relevant[object]["speed"])
+								object_instance.setAction(relevant[object]["action"])
 						#remove disappeared objects
 						for i in dynamics:
 							if (not i.name in relevant.keys()):
@@ -197,7 +198,7 @@ func handleMessage(message):
 						#update all still remaining nodes
 						for dynamicobj in dynamicRoot.get_children():
 							dynamicobj.updatePosition(relevant[dynamicobj.name]["x"], relevant[dynamicobj.name]["y"])
-							dynamicobj.setSpeed(relevant[dynamicobj.name]["speed"])
+
 
 					if (not "dynamicdata" in message["data"]):
 						print("NO OBJECTS")
