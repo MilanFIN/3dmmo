@@ -38,6 +38,12 @@ class GameMap():
 			return self.statics[objId]
 		else:
 			return None
+
+	def getDynamicObjectById(self, objId):
+		if (objId in self.dynamics):
+			return self.dynamics[objId]
+		else:
+			return None
 	
 	def getDynamicMap(self):
 		mapData = {}

@@ -97,6 +97,15 @@ class GameLogic():
 					elif (msg["actobject"] == "inventory"):
 						if (msg["acttarget"].isdigit()):# item index should be a number
 							player.setNextAction("inventory", msg["acttype"], msg["acttarget"])
+					elif (msg["actobject"] == "dynamic"):
+						mapId = player.getMapId()
+						target = self.maps[mapId].getDynamicObjectById(targetId)
+						if (target != None):
+							if (target.action == msg["acttype"]):
+								timeDiff = time.clock() - player.getLastActionTime()
+								if (timeDiff > 1):
+									player.setNextAction("dynamic", target.action, targetId)
+
 
 		self.gameMessages = {}	
 
@@ -133,6 +142,12 @@ class GameLogic():
 					if (player.nextActionType == "drop"):
 						player.setDoneAction("inventory", player.nextActionType, player.nextActionTargetId)
 						player.inventory.removeByIndex(int(player.nextActionTargetId))
+						player.clearNextAction()
+				elif (player.nextActionObjectType == "dynamic"):
+					if (player.nextActionType == "attack"):
+						print("attack")
+						player.resetActionTime()
+						player.setDoneAction("dynamic", player.nextActionType, player.nextActionTargetId)
 						player.clearNextAction()
 
 
