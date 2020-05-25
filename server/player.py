@@ -33,6 +33,9 @@ class Player():
 		
 
 		self.lastActionTime = time.clock()
+
+		self.attackTarget = ""
+		self.attackTargetType = ""
 	def getMapId(self):
 		return self.map
 	def hasValidMap(self):
@@ -92,5 +95,8 @@ class Player():
 	def getLastActionTime(self):
 		return self.lastActionTime
 
+	def setAttackTarget(self, target, targetType):
+		self.attackTarget = target
+		self.attackTargetType = targetType
 
 

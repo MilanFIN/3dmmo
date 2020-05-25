@@ -148,6 +148,7 @@ class GameLogic():
 						print("attack")
 						player.resetActionTime()
 						player.setDoneAction("dynamic", player.nextActionType, player.nextActionTargetId)
+						player.setAttackTarget(player.nextActionTargetId, "dynamic")
 						player.clearNextAction()
 
 
