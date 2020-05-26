@@ -89,7 +89,6 @@ class Player():
 		self.doneActionType = acttype
 		self.doneActionObjectType = objtype
 
-
 	def resetActionTime(self):
 		self.lastActionTime = time.clock()
 	def getLastActionTime(self):
@@ -99,4 +98,10 @@ class Player():
 		self.attackTarget = target
 		self.attackTargetType = targetType
 
+	def clearAttackTarget(self):
+		self.attackTarget = ""
+		self.attackTargetType = ""
 
+
+	def getAttack(self):
+		return 1

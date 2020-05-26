@@ -152,15 +152,19 @@ class GameLogic():
 						player.clearNextAction()
 
 		#handle player attacks
-		for player in self.players.values():
+		for uid in self.players:
+			player = self.players[uid]
 			if (player.attackTarget != ""):
 				if (player.attackTargetType == "dynamic"):
 					mapId = player.getMapId()
 					targetId = player.attackTarget
 					target = self.maps[mapId].getDynamicObjectById(targetId)
 					if (targetId != None):
-						print("attacking")
-						#DO DAMAGE TO ENEMY, and set target to player themself
+						maxDamage = player.getAttack()
+						damage = random.randint(0,maxDamage)
+						print("attacking ", damage)
+						if (not target.takeDamage(damage, uid)): #false if enemy dies
+							player.clearAttackTarget()
 
 		#update dynamic objects
 		for m in self.maps:

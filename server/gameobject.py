@@ -76,6 +76,7 @@ class DynamicObject(GameObject):
 		#data that every object should have
 		self.name = data["name"]
 		self.action = data["action"]
+		self.visible = True
 		self.speed = 0
 
 
@@ -93,6 +94,10 @@ class DynamicObject(GameObject):
 				y = float(y)
 				self.waypoints.append({"x":x, "y":y})
 
+		if (self.action == "attack"):
+			#aggressive npc, must have hp etch
+			self.hp = int(data["hp"])
+			self.attackTarget = ""
 
 		self.data = {}
 		self.data["x"] = self.x
@@ -125,4 +130,19 @@ class DynamicObject(GameObject):
 					self.targetWaypoint = 0
 			self.data["x"] = self.x
 			self.data["y"] = self.y
+		if (self.action == "attack"):
+			if (self.hp <= 0):
+				self.visible = False
+			pass
 
+	def takeDamage(self, damage, target):
+		if (self.action != "attack"):
+			return
+		if (damage < 0):
+			return
+		self.hp -= damage
+		self.attackTarget = target
+		if (self.hp <= 0):
+			return False
+		else:
+			return True
