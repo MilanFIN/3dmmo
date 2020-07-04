@@ -91,7 +91,7 @@ class GameLogic():
 						target = self.maps[mapId].getStaticObjectById(targetId)
 						if (target != None):
 							if (target.action == msg["acttype"]):
-								timeDiff = time.clock() - player.getLastActionTime()
+								timeDiff = time.time() - player.getLastActionTime()
 								if (timeDiff > 1):
 									player.setNextAction("static", target.action, targetId)
 					elif (msg["actobject"] == "inventory"):
@@ -102,7 +102,7 @@ class GameLogic():
 						target = self.maps[mapId].getDynamicObjectById(targetId)
 						if (target != None):
 							if (target.action == msg["acttype"]):
-								timeDiff = time.clock() - player.getLastActionTime()
+								timeDiff = time.time() - player.getLastActionTime()
 								if (timeDiff > 1):
 									player.setNextAction("dynamic", target.action, targetId)
 

@@ -1,6 +1,7 @@
 import configparser
 import json
 import math
+import time
 
 class GameObject():
 	def __init__(self, properties):
@@ -97,7 +98,10 @@ class DynamicObject(GameObject):
 		if (self.action == "attack"):
 			#aggressive npc, must have hp etch
 			self.hp = int(data["hp"])
+			self.maxHp = self.hp
 			self.attackTarget = ""
+			self.deathTime = time.time()
+			self.respawnDelay = int(data["respawn"])
 
 		self.data = {}
 		self.data["x"] = self.x
@@ -132,7 +136,12 @@ class DynamicObject(GameObject):
 			self.data["y"] = self.y
 		if (self.action == "attack"):
 			if (self.hp <= 0):
-				self.visible = False
+
+				if (time.time() - self.deathTime > self.respawnDelay):
+					self.hp = self.maxHp
+					self.visible = True
+				else:
+					self.visible = False
 			pass
 
 	def takeDamage(self, damage, target):
@@ -143,6 +152,8 @@ class DynamicObject(GameObject):
 		self.hp -= damage
 		self.attackTarget = target
 		if (self.hp <= 0):
+			#character died...
+			self.deathTime = time.time()
 			return False
 		else:
 			return True

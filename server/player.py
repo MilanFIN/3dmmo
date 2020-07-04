@@ -32,7 +32,7 @@ class Player():
 		self.inventory = Inventory()
 		
 
-		self.lastActionTime = time.clock()
+		self.lastActionTime = time.time()
 
 		self.attackTarget = ""
 		self.attackTargetType = ""
@@ -90,7 +90,7 @@ class Player():
 		self.doneActionObjectType = objtype
 
 	def resetActionTime(self):
-		self.lastActionTime = time.clock()
+		self.lastActionTime = time.time()
 	def getLastActionTime(self):
 		return self.lastActionTime
 

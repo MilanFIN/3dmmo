@@ -51,6 +51,7 @@ class GameMap():
 			if (self.dynamics[i].visible):
 				mapData[i] = self.dynamics[i].getData()
 		return json.dumps(mapData)
+	
 
 	def getDynamicObjects(self):
 		return self.dynamics.values()
