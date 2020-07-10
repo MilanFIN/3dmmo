@@ -187,6 +187,19 @@ class GameLogic():
 			playerState["angle"] = str(player.angle)
 			playerState["mapId"] = player.getMapId()
 
+
+			playerState["hp"] = {}
+			playerState["hp"]["hp"] = player.getHp()
+			playerState["hp"]["maxhp"] = player.getMaxHp()
+
+			"""
+			print(player.hp)
+			player.hp -= 1
+			if (player.hp <= 0):
+				player.resetHp()
+			"""
+
+
 			if (player.state == "turning"):
 				playerState["targetangle"] = player.targetAngle
 			if (player.state == "moving"):
@@ -204,6 +217,7 @@ class GameLogic():
 				playerState["override"] = "1"
 			if (player.inventory.hasChanged()):
 				playerState["inv"] = player.inventory.getItems()
+
 
 			playerStates[player.username] = playerState
 
@@ -223,7 +237,7 @@ class GameLogic():
 			#handle map changes and the player initialization with the default map
 			player = self.players[uid]
 			if (not player.hasValidMap()):
-				print("not valid")
+				#print("not valid")
 				player.validateMap()
 				mapId = player.getMapId()
 				mapJSON = self.maps[mapId].getStaticMap()

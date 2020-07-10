@@ -17,6 +17,10 @@ class Player():
 		self.mapValid = False
 
 
+		self.maxHp = 10
+		self.hp = 10
+
+
 		self.nextActionTargetId = ""
 		self.nextActionType = ""
 		self.nextActionObjectType = ""
@@ -105,3 +109,10 @@ class Player():
 
 	def getAttack(self):
 		return 1
+
+	def getHp(self):
+		return self.hp
+	def getMaxHp(self):
+		return self.maxHp
+	def resetHp(self):
+		self.hp = self.maxHp

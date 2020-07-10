@@ -167,12 +167,16 @@ func handleMessage(message):
 							player.clearCurrentAction()
 						if ("inv" in playerData):
 							inventory.setItems(playerData["inv"])
-							#print("INV CHANGE", playerData["inv"])
-		
 						if ("override" in playerData):
-		
 							print("stopped action")
 							player.forceState(playerData["state"], playerData["x"], playerData["y"])
+						if ("hp" in playerData):
+							var hpDict = playerData["hp"]
+							if ("hp" in hpDict and "maxhp" in hpDict):
+								player.setHp(hpDict["hp"], hpDict["maxhp"])
+								print(hpDict["hp"])
+					
+					#handle npc's etc
 					if ("dynamicdata" in message["data"]):
 						var relevant = parse_json(message["data"]["dynamicdata"])
 						var dynamicRoot = get_node("./level/DynamicMap")
@@ -198,11 +202,11 @@ func handleMessage(message):
 						#update all still remaining nodes
 						for dynamicobj in dynamicRoot.get_children():
 							dynamicobj.updatePosition(relevant[dynamicobj.name]["x"], relevant[dynamicobj.name]["y"])
-
-
 					if (not "dynamicdata" in message["data"]):
 						print("NO OBJECTS")
 
+
+			#handle chat
 			elif (message["type"] == "message"):
 				var messageBox = get_node("./level/HUD/MessageBox")
 				messageBox.addMessageBatch(message["data"])

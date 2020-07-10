@@ -5,6 +5,9 @@ const ROTSPEED = 70
 var velocity = Vector3(0,0,0)
 
 
+var hp = 10
+var maxHp = 10
+
 var target = Vector2(0,0) #x,z target location
 var difference = 0 #difference between current angle and goal
 var state = "idle" #idle, turning, moving
@@ -123,6 +126,13 @@ func forceState(newState, x = null, y = null):
 	if (y != null):
 		translation.z = float(y)
 	state = newState
+
+func setHp(newHp, newMaxHp):
+	hp = newHp
+	maxHp = newMaxHp
+	var hpBar = get_tree().get_root().get_node("gamecontroller/level/HUD/HealthBar")
+	hpBar.setHp(hp, maxHp)
+
 
 
 func _on_hud_mouse_entered():
