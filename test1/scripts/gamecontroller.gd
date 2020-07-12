@@ -174,7 +174,7 @@ func handleMessage(message):
 							var hpDict = playerData["hp"]
 							if ("hp" in hpDict and "maxhp" in hpDict):
 								player.setHp(hpDict["hp"], hpDict["maxhp"])
-								print(hpDict["hp"])
+
 					
 					#handle npc's etc
 					if ("dynamicdata" in message["data"]):

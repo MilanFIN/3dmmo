@@ -99,6 +99,7 @@ class DynamicObject(GameObject):
 			#aggressive npc, must have hp etch
 			self.hp = int(data["hp"])
 			self.maxHp = self.hp
+			#uid
 			self.attackTarget = ""
 			self.deathTime = time.time()
 			self.respawnDelay = int(data["respawn"])
@@ -150,10 +151,14 @@ class DynamicObject(GameObject):
 		if (damage < 0):
 			return
 		self.hp -= damage
-		self.attackTarget = target
 		if (self.hp <= 0):
 			#character died...
+			self.attackTarget = ""
 			self.deathTime = time.time()
 			return False
 		else:
+			self.attackTarget = target
 			return True
+		
+	def forgetAttackTarget(self):
+		self.attackTarget == ""

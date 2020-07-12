@@ -3,6 +3,7 @@ from multiprocessing import Process, Queue
 import time
 import uuid
 import random
+import math
 
 from player import *
 from gamemap import *
@@ -151,6 +152,8 @@ class GameLogic():
 						player.setAttackTarget(player.nextActionTargetId, "dynamic")
 						player.clearNextAction()
 
+
+
 		#handle player attacks
 		for uid in self.players:
 			player = self.players[uid]
@@ -166,13 +169,33 @@ class GameLogic():
 						if (not target.takeDamage(damage, uid)): #false if enemy dies
 							player.clearAttackTarget()
 
+
+
 		#update dynamic objects
 		for m in self.maps:
 			dobjs = self.maps[m].getDynamicObjects()
 			for d in dobjs:
+				#maybe move updating to after handing attacking, so we can deal with movement
 				d.update()
+				if (d.action == "attack"):
+					if (d.attackTarget != ""):
+						attacked = False
+						#npc has been attacked by the player
+						if (d.attackTarget in self.players):
+							#should check if
+							player = self.players[uid]
+							pass #should check distance  to player and if map is the same
+							if (m == player.getMapId()):
+								distance = math.sqrt( ((d.x-player.x)**2)+((d.y-player.y)**2) )
+								print(distance)
+								if (distance < 20):
+									print("close enough to attack")
+						if (not attacked):
+							#player does not exist, so forget it
+							print("not attacking anymore")
+							d.forgetAttackTarget()
 
-		
+
 
 
 		#make a dict with each player's gamestate
