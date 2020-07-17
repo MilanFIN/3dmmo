@@ -146,7 +146,6 @@ class GameLogic():
 						player.clearNextAction()
 				elif (player.nextActionObjectType == "dynamic"):
 					if (player.nextActionType == "attack"):
-						print("attack")
 						player.resetActionTime()
 						player.setDoneAction("dynamic", player.nextActionType, player.nextActionTargetId)
 						player.setAttackTarget(player.nextActionTargetId, "dynamic")
@@ -162,13 +161,16 @@ class GameLogic():
 					mapId = player.getMapId()
 					targetId = player.attackTarget
 					target = self.maps[mapId].getDynamicObjectById(targetId)
+					attacked = False
 					if (targetId != None):
-						maxDamage = player.getAttack()
-						damage = random.randint(0,maxDamage)
-						print("attacking ", damage)
-						if (not target.takeDamage(damage, uid)): #false if enemy dies
-							player.clearAttackTarget()
 
+						distance = math.sqrt( ((target.x-player.x)**2)+((target.y-player.y)**2) )
+						if (distance < 20):
+							maxDamage = player.getAttack()
+							damage = random.randint(0,maxDamage)
+							attacked = target.takeDamage(damage, uid) #false if enemy dies
+					if (not attacked):
+						player.clearAttackTarget()
 
 
 		#update dynamic objects
@@ -187,12 +189,17 @@ class GameLogic():
 							pass #should check distance  to player and if map is the same
 							if (m == player.getMapId()):
 								distance = math.sqrt( ((d.x-player.x)**2)+((d.y-player.y)**2) )
-								print(distance)
 								if (distance < 20):
-									print("close enough to attack")
+									maxDamage = d.getAttack()
+									damage = random.randint(0,maxDamage)
+
+									attacked = player.takeDamage(damage)
+								
 						if (not attacked):
-							#player does not exist, so forget it
-							print("not attacking anymore")
+							#cannot attack player anymore
+
+							print("forget target")
+
 							d.forgetAttackTarget()
 
 

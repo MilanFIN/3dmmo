@@ -116,3 +116,12 @@ class Player():
 		return self.maxHp
 	def resetHp(self):
 		self.hp = self.maxHp
+
+	def takeDamage(self, damage):
+		pass
+		self.hp -= damage
+		if (self.hp <= 0):
+			print("we died")
+			return False
+		else:
+			return True

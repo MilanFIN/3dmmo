@@ -152,13 +152,18 @@ class DynamicObject(GameObject):
 			return
 		self.hp -= damage
 		if (self.hp <= 0):
-			#character died...
+			#we died...
 			self.attackTarget = ""
 			self.deathTime = time.time()
 			return False
 		else:
 			self.attackTarget = target
 			return True
-		
+
+
 	def forgetAttackTarget(self):
-		self.attackTarget == ""
+		self.attackTarget = ""
+
+	def getAttack(self):
+		return 1
+
