@@ -117,11 +117,27 @@ class Player():
 	def resetHp(self):
 		self.hp = self.maxHp
 
+	def respawn(self):
+		self.clearAttackTarget()
+		self.clearNextAction()
+		self.x = 0
+		self.y = 0
+		self.hp = self.maxHp
+		self.overrideState = True
+		self.angle = 0
+		self.targetAngle = 0
+		self.targetX = 0
+		self.targetY = 0
+		self.map = "0"
+		self.mapValid = False
+
+
 	def takeDamage(self, damage):
 		pass
 		self.hp -= damage
 		if (self.hp <= 0):
 			print("we died")
+			self.respawn()
 			return False
 		else:
 			return True
