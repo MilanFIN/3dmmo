@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://assets/playership.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/playership.gd" type="Script" id=2]
@@ -7,27 +7,74 @@
 [ext_resource path="res://scripts/Inventory.gd" type="Script" id=5]
 [ext_resource path="res://scripts/hud/HealthBar.gd" type="Script" id=6]
 
-[sub_resource type="BoxShape" id=1]
+[sub_resource type="PlaneMesh" id=1]
+size = Vector2( 100, 100 )
+subdivide_width = 50
+subdivide_depth = 50
 
-[sub_resource type="CubeMesh" id=2]
+[sub_resource type="Shader" id=2]
+code = "shader_type spatial;
+
+uniform vec4 out_color : hint_color = vec4(0.0, 0.2, 1.0, 1.0);
+uniform float amount : hint_range(0.2, 1.5) = 0.8;
+uniform float beer_factor = 0.2;
+
+float generateOffset(float x, float z, float val1, float val2, float time) {
+	float speed = 1.0;
+	
+	float radiansX = ((mod(x+z*x* val1,amount)/amount) +(time*speed) * mod(x*0.8 +z, 1.5 ))*2.0*3.14;
+	float radiansZ = ((mod(val2*(z*x + x*z), amount) / amount) + (time*speed) *2.0*mod(x, 2.0))*2.0*3.14;
+	return amount * 0.5 * (sin(radiansZ)+cos(radiansX));
+
+}	
+
+vec3 applyDistortion(vec3 vertex, float time) {
+	float xd = generateOffset(vertex.x, vertex.z, 0.2, 0.1, time);
+	float yd = generateOffset(vertex.x, vertex.z, 0.1, 0.3, time);
+	float zd = generateOffset(vertex.x, vertex.z, 0.15, 0.2, time);
+	return vertex + vec3(xd,yd,zd);
+}
+
+
+void vertex() {
+	VERTEX = applyDistortion(VERTEX, TIME*0.1);
+}
+
+void fragment() {
+	
+	NORMAL=normalize(cross(dFdx(VERTEX), dFdy(VERTEX)));
+	
+	METALLIC=0.6;
+	SPECULAR=0.5;
+	ROUGHNESS=0.2;
+	
+	ALBEDO=out_color.xyz;
+	
+	float depth = texture(DEPTH_TEXTURE, SCREEN_UV).r;
+	depth = depth*2.0-1.0;
+	depth = PROJECTION_MATRIX[3][2] / (depth + PROJECTION_MATRIX[2][2]);
+	depth = depth + VERTEX.z;
+	depth = exp(-depth * beer_factor);
+	ALPHA = clamp(1.0-depth, 0.0, 1.0);
+}"
+
+[sub_resource type="ShaderMaterial" id=3]
+shader = SubResource( 2 )
+shader_param/out_color = Color( 0, 0.2, 1, 1 )
+shader_param/amount = 0.8
+shader_param/beer_factor = 0.2
 
 [node name="level" type="Spatial"]
 
-[node name="box" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.85401, -2 )
-
-[node name="CollisionShape" type="CollisionShape" parent="box"]
-shape = SubResource( 1 )
-
-[node name="MeshInstance" type="MeshInstance" parent="box"]
-mesh = SubResource( 2 )
-material/0 = null
+[node name="Sea" type="MeshInstance" parent="."]
+mesh = SubResource( 1 )
+material/0 = SubResource( 3 )
 
 [node name="playership" parent="." instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15.6908, 7.0384 )
+transform = Transform( 1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 15.6908, 7.0384 )
 light_energy = 5.0
 light_indirect_energy = 5.0
 
