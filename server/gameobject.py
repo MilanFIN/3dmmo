@@ -56,6 +56,7 @@ class StaticObject(GameObject):
 		self.data["y"] = self.y
 		self.data["type"] = self.type
 		self.data["action"] = self.action
+		self.data["radius"] = self.radius
 
 
 
