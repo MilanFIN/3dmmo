@@ -8,7 +8,7 @@ extends "res://scripts/mapobjects/base_object.gd"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	get_node("./CollisionShape").shape.radius = 2
+	#get_node("./CollisionShape").shape.radius = 2
 	pass # Replace with function body.
 
 

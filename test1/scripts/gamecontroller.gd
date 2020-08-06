@@ -224,11 +224,13 @@ func handleMessage(message):
 					var x = objects[o]["x"]
 					var y = objects[o]["y"]
 					var action = objects[o]["action"]
+					var radius = objects[o]["radius"]
 					var mapObject = load("res://assets/mapobjects/"+type+".tscn")
 					var objectInstance = mapObject.instance()
 					objectInstance.set_name(o)
 					objectInstance.setPos(x, y)
 					objectInstance.setAction(action)
+					objectInstance.setRadius(radius)
 					
 					mapRoot.add_child(objectInstance)
 					

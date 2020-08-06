@@ -21,6 +21,9 @@ func setAction(action):
 
 func action():
 	return _actionType
+	
+func setRadius(radius):
+	get_node("./CollisionShape").shape.radius = float(radius)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
