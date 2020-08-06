@@ -90,4 +90,5 @@ ui_mouseleft={
 
 [rendering]
 
+environment/default_clear_color=Color( 0.0313726, 0.556863, 0.941176, 1 )
 environment/default_environment="res://environments/spaceenv.tres"
