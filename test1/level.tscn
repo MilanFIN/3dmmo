@@ -61,8 +61,8 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id=3]
 shader = SubResource( 2 )
 shader_param/out_color = Color( 0, 0.2, 1, 1 )
-shader_param/amount = 0.8
-shader_param/beer_factor = 0.2
+shader_param/amount = 0.4
+shader_param/beer_factor = 3.0
 
 [node name="level" type="Spatial"]
 

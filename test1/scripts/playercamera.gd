@@ -107,6 +107,7 @@ func _input(event):
 							var actionType = i.action()
 							var actionTarget = i.name
 							if (actionType != "none"):
+								print("actiontype", actionType)
 								get_parent().setNextAction("static", actionType, actionTarget)
 								nodeClicked = true
 								break
