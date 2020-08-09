@@ -194,6 +194,7 @@ func handleMessage(message):
 								object_instance.setPosition(relevant[object]["x"], relevant[object]["y"])
 								object_instance.setSpeed(relevant[object]["speed"])
 								object_instance.setAction(relevant[object]["action"])
+								object_instance.setRadius(relevant[object]["radius"])
 						#remove disappeared objects
 						for i in dynamics:
 							if (not i.name in relevant.keys()):

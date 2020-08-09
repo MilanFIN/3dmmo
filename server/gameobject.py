@@ -80,6 +80,7 @@ class DynamicObject(GameObject):
 		self.action = data["action"]
 		self.visible = True
 		self.speed = 0
+		self.radius = data["radius"]
 
 
 		self.moving = False
@@ -111,7 +112,8 @@ class DynamicObject(GameObject):
 		self.data["type"] = self.type
 		self.data["action"] = self.action
 		self.data["speed"] = self.speed
-	
+		self.data["radius"] = self.radius
+
 	def update(self):
 		if (self.moving):
 			target = self.waypoints[self.targetWaypoint]
