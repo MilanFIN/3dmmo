@@ -1,6 +1,5 @@
 extends Spatial
 
-var _delta = 0.0
 
 # Declare member variables here. Examples:
 # var a = 2
@@ -11,6 +10,7 @@ var _delta = 0.0
 func _ready():
 	pass # Replace with function body.
 
+
 func _process(delta):
 	pass
 	var camera = get_viewport().get_camera()
@@ -19,14 +19,12 @@ func _process(delta):
 	#mesh.look_at(Vector3(point.x, point.y, point.z), Vector3.UP)
 	look_at(point - translation, Vector3.DOWN)
 
-	
-func setHp(hp, maxHp):
-	var fraction = float(hp)/maxHp
-	var green = get_node("Viewport/Control/Panel/green")
-	var red = get_node("Viewport/Control/Panel/red")
-	var maxWidth = red.rect_size.x
-	green.rect_size.x = maxWidth * fraction
 
+func setName(n):
+	print("name ", n)
+	var label = get_node("Viewport/Control/Panel/Label")
+	label.text = n
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

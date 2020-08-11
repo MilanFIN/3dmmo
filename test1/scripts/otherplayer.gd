@@ -5,6 +5,7 @@ extends KinematicBody
 const SPEED = 500
 const ROTSPEED = 70
 
+
 var angle = 0
 var targetAngle = 0
 var state = "idle"
@@ -57,7 +58,12 @@ func _physics_process(delta):
 			
 		
 	
+func set_name(n):
+	.set_name(n)
+	get_node("NameLabel").setName(n)
 
+
+	
 
 func updateState(data):
 	#print(data)

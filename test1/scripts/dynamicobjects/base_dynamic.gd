@@ -72,7 +72,6 @@ func setSpeed(s):
 	speed = float(s) / global.tickrate
 
 func setRadius(r):
-	print("set radius", r)
 	radius = float(r)
 
 func getRadius():
