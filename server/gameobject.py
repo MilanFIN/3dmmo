@@ -170,3 +170,9 @@ class DynamicObject(GameObject):
 	def getAttack(self):
 		return 1
 
+	def getData(self):
+		if (self.action == "attack"):
+			self.data["hp"] = self.hp
+			self.data["mhp"] = self.maxHp
+		return self.data
+

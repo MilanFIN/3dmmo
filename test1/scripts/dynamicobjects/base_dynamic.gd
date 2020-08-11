@@ -74,15 +74,19 @@ func setSpeed(s):
 func setRadius(r):
 	print("set radius", r)
 	radius = float(r)
-	
+
 func getRadius():
 	return radius
-	
+
 func setAction(a):
 	actionType = a
 
 func action():
 	return actionType
+
+#predefinition for derived classes
+func setHp(hp, maxHp):
+	pass
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass

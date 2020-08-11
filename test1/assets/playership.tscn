@@ -9,10 +9,8 @@ extents = Vector3( 2, 1, 4 )
 [node name="playership" type="KinematicBody"]
 
 [node name="Camera" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 2.96075, 5.80266 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.96075, 5.80266 )
 script = ExtResource( 2 )
-
-[node name="PlayerMesh2" type="MeshInstance" parent="."]
 
 [node name="Laser" type="ImmediateGeometry" parent="."]
 

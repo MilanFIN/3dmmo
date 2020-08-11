@@ -203,6 +203,8 @@ func handleMessage(message):
 						#update all still remaining nodes
 						for dynamicobj in dynamicRoot.get_children():
 							dynamicobj.updatePosition(relevant[dynamicobj.name]["x"], relevant[dynamicobj.name]["y"])
+							if ("hp" in relevant[dynamicobj.name] and "mhp" in relevant[dynamicobj.name]):
+								dynamicobj.setHp(relevant[dynamicobj.name]["hp"], relevant[dynamicobj.name]["mhp"])
 					if (not "dynamicdata" in message["data"]):
 						print("NO OBJECTS")
 
