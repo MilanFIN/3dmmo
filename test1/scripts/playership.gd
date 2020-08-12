@@ -9,10 +9,10 @@ var hp = 10
 var maxHp = 10
 
 var target = Vector2(0,0) #x,z target location
-var difference = 0 #difference between current angle and goal
+
 var state = "idle" #idle, turning, moving
 var angle = 0
-var targetAngle = 0
+
 var nextActionType = ""
 var nextActionTarget = ""
 var nextActionObjectType = ""
@@ -32,22 +32,25 @@ func _physics_process(delta):
 	var meshNode = get_node("./PlayerMesh")
 	var collisionNode = get_node("./CollisionShape")
 	collisionNode.rotation = meshNode.rotation
-	angle = rad2deg(meshNode.rotation.y)
 
-	#translation = Vector3(-14, translation.y, -14)
-	#print(difference)
 	
-	if (state == "turning"):
+
+
+	if (state == "moving"):
+		var direction = Vector3(target.x-translation.x, 0, target.y-translation.z).normalized()
+
+		var forward = -meshNode.get_global_transform().basis.z
+		forward = Vector2(forward.x, forward.z).normalized()
+		var planeDir = Vector2(direction.x, direction.z)
+	
+		var difference = rad2deg( forward.angle_to(planeDir))
+		print(difference)
 		if (difference < 0):
 			meshNode.rotate_y(deg2rad(ROTSPEED*delta))
-			difference += ROTSPEED*delta
+
 		elif (difference > 0):
 			meshNode.rotate_y(deg2rad(-ROTSPEED*delta))
-			difference -= ROTSPEED*delta
-		if (abs(difference) < 2):
-			state = "moving"
-	elif (state == "moving"):
-		var direction = Vector3(target.x-translation.x, 0, target.y-translation.z).normalized()
+
 		move_and_slide(direction*SPEED*delta)
 
 		if (get_slide_count() != 0):
@@ -79,20 +82,10 @@ func _physics_process(delta):
 
 
 func moveTo(targetLocation):
-	var meshNode = get_node("./PlayerMesh")
-	var forward = meshNode.get_global_transform().basis.z
-	forward = Vector2(forward.x, forward.z).normalized()
-
-	#translation arvot on kerrottu -1:llä???
-
-	var targetDir = Vector2(targetLocation.x+translation.x, targetLocation.z+translation.z).normalized()
-
-
-	difference = rad2deg( forward.angle_to(targetDir))
-	state = "turning"
+	state = "moving"
 	target = -Vector2(targetLocation.x, targetLocation.z)
 	
-	targetAngle = angle - difference
+
 
 func nextAction():
 	if (nextActionType != "" and nextActionTarget != "" and nextActionObjectType != ""):
