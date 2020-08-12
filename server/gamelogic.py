@@ -63,25 +63,17 @@ class GameLogic():
 				if ("action" in msg):
 					
 					#MOVEMENT
-					if (msg["action"] == "idle" and "angle" in msg and "x" in msg and "y" in msg):
+					if (msg["action"] == "idle" and "x" in msg and "y" in msg):
 						player.x = float(msg["x"])
 						player.y = float(msg["y"])
-						player.angle = float(msg["angle"])
 						player.state = "idle"
-					elif (msg["action"] == "turning" and "angle" in msg and "targetangle" in msg):
-						if (player.targetAngle != msg["targetangle"]):
-							player.clearNextAction()
-						player.angle = float(msg["angle"])
-						player.targetAngle = float(msg["targetangle"])
-						player.state = "turning"
-					elif (msg["action"] == "moving" and "x" in msg and "y" in msg and "targetx" in msg and "targety" in msg and "angle" in msg):
+					elif (msg["action"] == "moving" and "x" in msg and "y" in msg and "targetx" in msg and "targety" in msg):
 						if (player.targetX != msg["targetx"] or player.targetY != msg["targety"]):
 							player.clearNextAction()
 						player.x = float(msg["x"])
 						player.y = float(msg["y"])
 						player.targetX = msg["targetx"]
 						player.targetY = msg["targety"]
-						player.angle = msg["angle"]
 						player.state = "moving"
 
 				#SET NEXT ACTIONS TO PLAYERS
@@ -214,7 +206,6 @@ class GameLogic():
 			playerState["x"] = player.x
 			playerState["y"] = player.y
 			playerState["state"] = player.state
-			playerState["angle"] = str(player.angle)
 			playerState["mapId"] = player.getMapId()
 
 
@@ -230,14 +221,11 @@ class GameLogic():
 			"""
 
 
-			if (player.state == "turning"):
-				playerState["targetangle"] = player.targetAngle
 			if (player.state == "moving"):
 				playerState["x"] = player.x
 				playerState["y"] = player.y
 				playerState["targetx"] = player.targetX
 				playerState["targety"] = player.targetY
-				playerState["angle"] = player.angle
 			
 			if (player.hasDoneAction()):
 				playerState["actobject"] = player.doneActionObjectType

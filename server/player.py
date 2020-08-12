@@ -9,8 +9,6 @@ class Player():
 		self.y = 0
 		self.state = "idle"
 		self.overrideState = False
-		self.angle = 0
-		self.targetAngle = 0
 		self.targetX = 0
 		self.targetY = 0
 		self.map = "0"
@@ -124,8 +122,6 @@ class Player():
 		self.y = 0
 		self.hp = self.maxHp
 		self.overrideState = True
-		self.angle = 0
-		self.targetAngle = 0
 		self.targetX = 0
 		self.targetY = 0
 		self.map = "0"

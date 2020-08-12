@@ -75,17 +75,14 @@ func sendState():
 	#figure out state of movement
 	var state = player.state
 	var status = {"action":state}
-	var angle = player.angle
+
 	if (state == "idle"):
-		status["angle"] = str(angle)
+
 		status["x"] = str(player.translation.x)
 		status["y"] = str(player.translation.z)
-	elif (state == "turning"):
-		var targetangle = player.targetAngle
-		status["angle"] = str(angle)
-		status["targetangle"] = str(targetangle)
+
 	elif (state == "moving"):
-		status["angle"] = str(player.angle)
+
 		status["x"] = str(player.translation.x)
 		status["y"] = str(player.translation.z)
 		status["targetx"] = str(player.target.x)

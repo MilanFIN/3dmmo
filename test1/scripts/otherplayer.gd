@@ -3,11 +3,11 @@ extends KinematicBody
 
 
 const SPEED = 500
-const ROTSPEED = 70
+const ROTSPEED = 140#70
+const MAXANGLEDIFF = 5
 
 
-var angle = 0
-var targetAngle = 0
+
 var state = "idle"
 var target = Vector2(0,0) #x,z target location
 var x = 0
@@ -24,7 +24,7 @@ func _ready():
 
 func _physics_process(delta):
 	var meshNode = get_node("./Mesh")
-	meshNode.rotation.y = deg2rad(angle)
+
 	#print(state)
 	if (x != null and y != null):
 		translation.x = x
@@ -34,19 +34,22 @@ func _physics_process(delta):
 
 	if (state == "idle"):
 		pass
-	if (state == "turning"):
 
-		var difference = angle - targetAngle
-		if (abs(difference) < 2):
-			state == "idle"
-		elif (difference < 0):
-			angle += ROTSPEED*delta
-		elif (difference > 0):
-			angle -= ROTSPEED*delta
 	elif (state == "moving"):
 		
 		var direction = Vector3(target.x-translation.x, 0, target.y-translation.z).normalized()
 		
+		var forward = -meshNode.get_global_transform().basis.z
+		forward = Vector2(forward.x, forward.z).normalized()
+		var planeDir = Vector2(direction.x, direction.z)
+	
+		var difference = rad2deg( forward.angle_to(planeDir))
+
+		if (difference < -MAXANGLEDIFF):
+			meshNode.rotate_y(deg2rad(ROTSPEED*delta))
+
+		elif (difference > MAXANGLEDIFF):
+			meshNode.rotate_y(deg2rad(-ROTSPEED*delta))
 
 		move_and_slide(direction*SPEED*delta)
 		var locationDifference = abs(target.x-translation.x)+abs(target.y-translation.z)
@@ -71,18 +74,9 @@ func updateState(data):
 	var previousState = state
 	state = data["state"]
 	if (state == "idle"):
-		angle = float(data["angle"])
 		x = float(data["x"])
 		y = float(data["y"])
-
-	elif (state == "turning"):
-		if (targetAngle != data["targetangle"]):
-			angle = float(data["angle"])
-			targetAngle = float(data["targetangle"])
-			x = float(data["x"])
-			y = float(data["y"])
 	elif (state == "moving"):
-		angle = float(data["angle"])
 		var newTarget = Vector2(data["targetx"],data["targety"])
 
 		if (target != newTarget):
