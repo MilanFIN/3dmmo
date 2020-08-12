@@ -1,7 +1,8 @@
 extends KinematicBody
 
 const SPEED = 500
-const ROTSPEED = 70
+const ROTSPEED = 140#70
+const MAXANGLEDIFF = 5
 var velocity = Vector3(0,0,0)
 
 
@@ -34,7 +35,7 @@ func _physics_process(delta):
 	collisionNode.rotation = meshNode.rotation
 
 	
-
+	
 
 	if (state == "moving"):
 		var direction = Vector3(target.x-translation.x, 0, target.y-translation.z).normalized()
@@ -44,11 +45,11 @@ func _physics_process(delta):
 		var planeDir = Vector2(direction.x, direction.z)
 	
 		var difference = rad2deg( forward.angle_to(planeDir))
-		print(difference)
-		if (difference < 0):
+
+		if (difference < -MAXANGLEDIFF):
 			meshNode.rotate_y(deg2rad(ROTSPEED*delta))
 
-		elif (difference > 0):
+		elif (difference > MAXANGLEDIFF):
 			meshNode.rotate_y(deg2rad(-ROTSPEED*delta))
 
 		move_and_slide(direction*SPEED*delta)
