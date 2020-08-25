@@ -263,9 +263,16 @@ class GameLogic():
 				result.append(res1)
 
 				
-
+		#tell player objects to clean up tick related stuff
 		for uid in self.players:
 			self.players[uid].tickDone()
+
+		for m in self.maps:
+			dobjs = self.maps[m].getDynamicObjects()
+			for d in dobjs:
+				#maybe move updating to after handing attacking, so we can deal with movement
+				d.tickDone()
+
 
 		#print(result)
 		return result #this should be a list of dicts of type {"user":uid, data:data}, data should include for example positions by player

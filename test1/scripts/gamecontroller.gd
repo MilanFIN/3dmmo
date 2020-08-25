@@ -202,6 +202,8 @@ func handleMessage(message):
 							dynamicobj.updatePosition(relevant[dynamicobj.name]["x"], relevant[dynamicobj.name]["y"])
 							if ("hp" in relevant[dynamicobj.name] and "mhp" in relevant[dynamicobj.name]):
 								dynamicobj.setHp(relevant[dynamicobj.name]["hp"], relevant[dynamicobj.name]["mhp"])
+							if ("dmghist" in relevant[dynamicobj.name]):
+								dynamicobj.showDamage(relevant[dynamicobj.name]["dmghist"]);
 					if (not "dynamicdata" in message["data"]):
 						print("NO OBJECTS")
 

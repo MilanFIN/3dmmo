@@ -105,6 +105,7 @@ class DynamicObject(GameObject):
 			self.attackTarget = ""
 			self.deathTime = time.time()
 			self.respawnDelay = int(data["respawn"])
+			self.damageHistory = []
 
 		self.data = {}
 		self.data["x"] = self.x
@@ -154,6 +155,8 @@ class DynamicObject(GameObject):
 		if (damage < 0):
 			return
 		self.hp -= damage
+		if (damage != 0):
+			self.damageHistory.append(str(damage))
 		if (self.hp <= 0):
 			#we died...
 			self.attackTarget = ""
@@ -174,5 +177,9 @@ class DynamicObject(GameObject):
 		if (self.action == "attack"):
 			self.data["hp"] = self.hp
 			self.data["mhp"] = self.maxHp
+			self.data["dmghist"] = self.damageHistory
 		return self.data
 
+	def tickDone(self):
+		if (self.action == "attack"):
+			self.damageHistory = []

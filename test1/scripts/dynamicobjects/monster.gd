@@ -19,6 +19,14 @@ func setHp(hp, maxHp):
 		healthBar.setHp(hp, maxHp)
 		lastHp = hp
 
+func showDamage(damageList):
+	if (damageList.size() != 0):
+		print(damageList)
+		for damage in damageList:
+			var damageObject = load("res://assets/2d/damageNumber.tscn")
+			var object_instance = damageObject.instance()
+			add_child(object_instance)
+			object_instance.setValue(damage)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
