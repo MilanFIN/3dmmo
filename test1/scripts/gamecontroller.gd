@@ -171,6 +171,9 @@ func handleMessage(message):
 							var hpDict = playerData["hp"]
 							if ("hp" in hpDict and "maxhp" in hpDict):
 								player.setHp(hpDict["hp"], hpDict["maxhp"])
+						if ("dmghist" in playerData):
+							player.showDamage(playerData["dmghist"]);
+	
 
 					
 					#handle npc's etc

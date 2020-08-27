@@ -213,6 +213,8 @@ class GameLogic():
 			playerState["hp"]["hp"] = player.getHp()
 			playerState["hp"]["maxhp"] = player.getMaxHp()
 
+			playerState["dmghist"] = player.damageHistory
+
 			"""
 			print(player.hp)
 			player.hp -= 1

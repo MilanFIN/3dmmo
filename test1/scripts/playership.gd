@@ -128,6 +128,15 @@ func setHp(newHp, newMaxHp):
 	hpBar.setHp(hp, maxHp)
 
 
+func showDamage(damageList):
+	if (damageList.size() != 0):
+		print(damageList)
+		for damage in damageList:
+			var damageObject = load("res://assets/2d/damageNumber.tscn")
+			var object_instance = damageObject.instance()
+			add_child(object_instance)
+			object_instance.setValue(damage)
+
 
 func _on_hud_mouse_entered():
 	var camera = get_node("./Camera")

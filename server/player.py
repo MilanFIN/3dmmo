@@ -38,6 +38,10 @@ class Player():
 
 		self.attackTarget = ""
 		self.attackTargetType = ""
+
+
+		self.damageHistory = []
+
 	def getMapId(self):
 		return self.map
 	def hasValidMap(self):
@@ -53,6 +57,8 @@ class Player():
 		self.doneActionObjectType = ""
 		self.overrideState = False
 		self.inventory.tickDone()
+
+		self.damageHistory = []
 
 	def forceState(self, state, x = None, y = None):
 		if (x != None):
@@ -135,5 +141,8 @@ class Player():
 			print("we died")
 			self.respawn()
 			return False
+		if (damage != 0):
+			self.damageHistory.append(str(damage))
+
 		else:
 			return True

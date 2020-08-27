@@ -1,7 +1,7 @@
 extends Spatial
 
-
-const maxAge = 2.0
+const MOVESPEED = 3
+const MAXAGE = 2.0
 var age = 0.0
 
 # Called when the node enters the scene tree for the first time.
@@ -18,10 +18,10 @@ func _process(delta):
 	#mesh.look_at(Vector3(point.x, point.y, point.z), Vector3.UP)
 	look_at(point - translation, Vector3.DOWN)
 	
-	translation.y += delta*2
+	translation.y += delta*MOVESPEED
 	
 	age += delta
-	if (age > maxAge):
+	if (age > MAXAGE):
 		queue_free()
 		
 

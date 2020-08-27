@@ -66,6 +66,17 @@ func set_name(n):
 	get_node("NameLabel").setName(n)
 
 
+
+
+func showDamage(damageList):
+	if (damageList.size() != 0):
+		print(damageList)
+		for damage in damageList:
+			var damageObject = load("res://assets/2d/damageNumber.tscn")
+			var object_instance = damageObject.instance()
+			add_child(object_instance)
+			object_instance.setValue(damage)
+
 	
 
 func updateState(data):
@@ -87,6 +98,9 @@ func updateState(data):
 	if ("override" in data):
 		x = float(data["x"])
 		y = float(data["y"])
+
+	if ("dmghist" in data):
+		showDamage(data["dmghist"]);
 
 
 
