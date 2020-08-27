@@ -23,6 +23,18 @@ var currentActionTarget = ""
 var currentActionObjectType = ""
 
 var laserMaterial = SpatialMaterial.new()
+
+
+var mapRadius = 200
+
+var blockedTiles = []
+var allowedTiles = []
+var allowedTileIds = {}
+var allowedTilePositions = {}
+var astar = AStar.new()
+
+
+
 func _ready():
 	laserMaterial.flags_unshaded = true
 	laserMaterial.flags_use_point_size = true
@@ -86,7 +98,31 @@ func moveTo(targetLocation):
 	state = "moving"
 	target = -Vector2(targetLocation.x, targetLocation.z)
 	
+	var currentPosition = Vector3(int(translation.x), 0, int(translation.z))
+	var targetPosition = Vector3(int(target.x), 0, int(target.y))
 
+	if (currentPosition in allowedTileIds and targetPosition in allowedTileIds):
+		var pathPoints = astar.get_point_path(allowedTileIds[currentPosition], allowedTileIds[targetPosition])
+
+
+			
+		#print(pathPoints)
+
+
+
+		var point_size = 5
+		var im = ImmediateGeometry.new()
+		get_tree().get_root().add_child(im)
+		var m = SpatialMaterial.new()
+		m.flags_use_point_size = true
+		m.params_point_size = point_size
+		im.set_material_override(m)
+		im.clear()
+		im.begin(Mesh.PRIMITIVE_POINTS, null)
+		for p in pathPoints: #list of Vector3s
+			im.add_vertex(p)
+		im.end()
+	
 
 func nextAction():
 	if (nextActionType != "" and nextActionTarget != "" and nextActionObjectType != ""):
@@ -130,13 +166,60 @@ func setHp(newHp, newMaxHp):
 
 func showDamage(damageList):
 	if (damageList.size() != 0):
-		print(damageList)
 		for damage in damageList:
 			var damageObject = load("res://assets/2d/damageNumber.tscn")
 			var object_instance = damageObject.instance()
 			add_child(object_instance)
 			object_instance.setValue(damage)
 
+
+
+
+func bakeNavMesh():
+	#startshere
+	blockedTiles = []
+	allowedTiles = []
+	allowedTileIds = {}
+	allowedTilePositions = {}
+
+	var staticNodes = get_tree().get_root().get_node("gamecontroller/level/StaticMap").get_children()
+	for i in staticNodes:
+		var radius = i.getRadius()
+		#blockedTiles.append(Vector3(i.translation.x,0, i.translation.z))
+		for x in range(-radius, radius):
+			for y in range(-radius, radius):
+				blockedTiles.append(Vector3(i.translation.x+x,0, i.translation.z+y))
+	
+	#print(blockedTiles)
+
+
+
+	var id = 0
+	for x in range(-mapRadius, mapRadius):
+		for y in range(-mapRadius, mapRadius):
+			var point = Vector3(x,0, y)
+			if (not( point in blockedTiles)):
+				allowedTiles.append(point)
+				allowedTileIds[point] = id
+				allowedTilePositions[id] = point
+				id += 1
+
+	astar.clear()
+	for i in (allowedTiles):
+		astar.add_point(allowedTileIds[i], i, 1) # Adds the point (1, 0, 0) with weight_scale 4 and id 1
+
+	for x in range(-mapRadius, mapRadius):
+		for y in range(-mapRadius, mapRadius):
+			var point = Vector3(x,0, y)
+			if (point in allowedTileIds):
+				for subx in range (-1, 1):
+					for suby in range(-1, 1):
+						if (subx != 0 || suby != 0):
+							var newPoint = Vector3(point.x+subx, 0, point.z+suby)
+							if (newPoint in allowedTileIds):
+								astar.connect_points(allowedTileIds[point], allowedTileIds[newPoint], true)
+		
+	#endshere
 
 func _on_hud_mouse_entered():
 	var camera = get_node("./Camera")

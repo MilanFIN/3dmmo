@@ -21,7 +21,6 @@ func setHp(hp, maxHp):
 
 func showDamage(damageList):
 	if (damageList.size() != 0):
-		print(damageList)
 		for damage in damageList:
 			var damageObject = load("res://assets/2d/damageNumber.tscn")
 			var object_instance = damageObject.instance()

@@ -238,6 +238,10 @@ func handleMessage(message):
 					objectInstance.setRadius(radius)
 					
 					mapRoot.add_child(objectInstance)
+
+				var player = get_node("./level/playership")
+				player.bakeNavMesh()
+
 					
 
 
