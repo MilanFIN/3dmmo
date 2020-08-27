@@ -16,5 +16,6 @@ script = ExtResource( 2 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 shape = SubResource( 1 )
+disabled = true
 
 [node name="PlayerMesh" parent="." instance=ExtResource( 1 )]

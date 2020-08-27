@@ -33,6 +33,7 @@ var allowedTileIds = {}
 var allowedTilePositions = {}
 var astar = AStar.new()
 
+var targetList = []
 
 
 func _ready():
@@ -71,7 +72,12 @@ func _physics_process(delta):
 
 		var locationDifference = abs(target.x-translation.x)+abs(target.y-translation.z)
 		if (locationDifference < 0.5):
-			state = "idle"
+
+			if (targetList.size() == 0):
+				state = "idle"
+			else:
+				target = Vector2(targetList[0].x, targetList[0].z)
+				targetList.remove(0)
 	
 	if (currentActionType == "mine"):
 		var laser = get_node("./Laser")
@@ -94,35 +100,72 @@ func _physics_process(delta):
 		laser.clear()
 
 
+func simplifyPointPath(points):
+	var result = [points[0]]
+	var xDir = null
+	var yDir = null
+	for i in range(1, points.size()):
+		if (xDir == null and yDir == null):
+			xDir = points[i].x - points[i-1].x
+			yDir = points[i].z - points[i-1].z
+		else:
+
+			if (i != points.size() - 1):
+				var newxDir = points[i].x - points[i-1].x
+				var newyDir = points[i].z - points[i-1].z
+
+				if (newxDir != xDir or newyDir != yDir):
+					result.append(points[i-1])
+					xDir = newxDir
+					yDir = newyDir
+			else:
+				result.append(points[i])
+
+	return result
+
+
+func drawPathPoints(pathPoints):
+	var point_size = 5
+	var im = ImmediateGeometry.new()
+	get_tree().get_root().add_child(im)
+	var m = SpatialMaterial.new()
+	m.flags_use_point_size = true
+	m.params_point_size = point_size
+	im.set_material_override(m)
+	im.clear()
+	im.begin(Mesh.PRIMITIVE_POINTS, null)
+	for p in pathPoints: #list of Vector3s
+		im.add_vertex(p)
+	im.end()
+
+
+
+
 func moveTo(targetLocation):
-	state = "moving"
-	target = -Vector2(targetLocation.x, targetLocation.z)
 	
+
+	var clickTarget = -Vector2(targetLocation.x, targetLocation.z)
+
 	var currentPosition = Vector3(int(translation.x), 0, int(translation.z))
-	var targetPosition = Vector3(int(target.x), 0, int(target.y))
+	var targetPosition = Vector3(int(clickTarget.x), 0, int(clickTarget.y))
 
 	if (currentPosition in allowedTileIds and targetPosition in allowedTileIds):
 		var pathPoints = astar.get_point_path(allowedTileIds[currentPosition], allowedTileIds[targetPosition])
 
-
 			
-		#print(pathPoints)
+		pathPoints = simplifyPointPath(pathPoints)
+		pathPoints.remove(0)
 
 
+		#drawPathPoints(pathPoints)
 
-		var point_size = 5
-		var im = ImmediateGeometry.new()
-		get_tree().get_root().add_child(im)
-		var m = SpatialMaterial.new()
-		m.flags_use_point_size = true
-		m.params_point_size = point_size
-		im.set_material_override(m)
-		im.clear()
-		im.begin(Mesh.PRIMITIVE_POINTS, null)
-		for p in pathPoints: #list of Vector3s
-			im.add_vertex(p)
-		im.end()
-	
+
+		state = "moving"
+		if (pathPoints.size() > 1):
+			targetList = pathPoints
+		target = Vector2(targetList[0].x, targetList[0].z)
+		targetList.remove(0)
+
 
 func nextAction():
 	if (nextActionType != "" and nextActionTarget != "" and nextActionObjectType != ""):
