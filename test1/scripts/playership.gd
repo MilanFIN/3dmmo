@@ -146,7 +146,17 @@ func moveTo(targetLocation):
 
 	var clickTarget = -Vector2(targetLocation.x, targetLocation.z)
 
+	#if current translation is actually closer to a blocked tile, we should find the closest free one in random direction
 	var currentPosition = Vector3(int(translation.x), 0, int(translation.z))
+	if (not (currentPosition  in allowedTileIds)):
+		var offset = []
+		for x in range(-1, 1):
+			for y in range(-1, 1):	
+				offset.push_back([x, y])
+		offset.shuffle()
+		currentPosition.x += offset[0][0]
+		currentPosition.z += offset[0][1]
+	
 	var targetPosition = Vector3(int(clickTarget.x), 0, int(clickTarget.y))
 
 	if (currentPosition in allowedTileIds and targetPosition in allowedTileIds):
@@ -161,10 +171,10 @@ func moveTo(targetLocation):
 
 
 		state = "moving"
-		if (pathPoints.size() > 1):
+		if (pathPoints.size() >= 1):
 			targetList = pathPoints
-		target = Vector2(targetList[0].x, targetList[0].z)
-		targetList.remove(0)
+			target = Vector2(targetList[0].x, targetList[0].z)
+			targetList.remove(0)
 
 
 func nextAction():

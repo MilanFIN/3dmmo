@@ -116,7 +116,22 @@ class DynamicObject(GameObject):
 		self.data["radius"] = self.radius
 
 	def update(self):
-		if (self.moving):
+
+		move = self.moving
+		if (self.action == "attack"):
+			if (self.hp <= 0):
+
+				if (time.time() - self.deathTime > self.respawnDelay):
+					self.hp = self.maxHp
+					self.visible = True
+				else:
+					self.visible = False
+			pass
+			if (self.attackTarget != ""):
+				move = False
+
+
+		if (move):
 			target = self.waypoints[self.targetWaypoint]
 			xDir = target["x"] - self.x
 			yDir = target["y"] - self.y
