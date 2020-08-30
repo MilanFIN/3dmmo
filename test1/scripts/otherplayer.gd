@@ -102,6 +102,10 @@ func updateState(data):
 		showDamage(data["dmghist"]);
 
 
+func showChatMessage(msg):
+	var label = get_node("./ChatLabel")
+	label.setMessage(msg)
+
 
 	pass
 # Called every frame. 'delta' is the elapsed time since the previous frame.

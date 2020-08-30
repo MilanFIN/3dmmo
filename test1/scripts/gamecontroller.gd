@@ -215,6 +215,18 @@ func handleMessage(message):
 			elif (message["type"] == "message"):
 				var messageBox = get_node("./level/HUD/MessageBox")
 				messageBox.addMessageBatch(message["data"])
+				for msg in message["data"]:
+					var userName = msg["u"]
+					var otherRoot = get_node("./level/OtherPlayers")
+					var others = otherRoot.get_children()
+					for o in others:
+						if (o.name == userName):
+							o.showChatMessage(msg["m"])
+							break
+					if (userName == global.username):
+						var player = get_node("./level/playership")
+						player.showChatMessage(msg["m"])
+
 			elif (message["type"] == "map"):
 				var mapRoot = get_node("./level/StaticMap")
 				var mapObjects = mapRoot.get_children()

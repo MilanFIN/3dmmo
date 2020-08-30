@@ -71,7 +71,7 @@ func _physics_process(delta):
 			state = "idle"
 
 		var locationDifference = abs(target.x-translation.x)+abs(target.y-translation.z)
-		if (locationDifference < 0.5):
+		if (locationDifference < 0.4):
 
 			if (targetList.size() == 0):
 				state = "idle"
@@ -273,6 +273,10 @@ func bakeNavMesh():
 								astar.connect_points(allowedTileIds[point], allowedTileIds[newPoint], true)
 		
 	#endshere
+	
+func showChatMessage(msg):
+	var label = get_node("./ChatLabel")
+	label.setMessage(msg)
 
 func _on_hud_mouse_entered():
 	var camera = get_node("./Camera")
