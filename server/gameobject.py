@@ -42,9 +42,9 @@ class StaticObject(GameObject):
 
 		#details that are specific to the action type
 		if (self.action == "changemap"):
-			self.targetMap = data["targetmap"]
-			self.exitX = data["exitx"]
-			self.exitY = data["exity"]
+			self.targetMap = properties["targetmap"] #data["targetmap"]
+			self.exitX = properties["exitx"] #data["exitx"]
+			self.exitY = properties["exity"] #data["exity"]
 		
 		elif (self.action == "mine"):
 			self.probability = float(data["probability"])
