@@ -1,15 +1,20 @@
 extends Camera
 
+const ROTATESPEED = 0.8 #multiplier of inputs
+const ZOOMSPEED = 1
+const MINDIST = 5
+const MAXDIST = 100
+const MOVEPLANESIZE = 1
+
+
+
 var previousMouseLocation = Vector2(0, 0)
 var mouseLocation = Vector2(0,0)
 var mouseMoved = false
 var mouseInitialized = false
 var velocity = Vector3(0,0,0)
 var zoomDirection = ""
-const ZOOMSPEED = 1
-const MINDIST = 5
-const MAXDIST = 100
-const MOVEPLANESIZE = 1
+
 var canClick = true
 
 func _ready():
@@ -30,11 +35,25 @@ func _physics_process(delta):
 		previousMouseLocation = mouseLocation
 		
 		var targetDir = node.translation - translation
+
+
 		var distance = targetDir.length()
 		translate_object_local(Vector3(0.0, 0.0, -distance)) # temporary zoom in
 		rotate_y(deg2rad(-mouseMovement.x))
 		var upDir = Vector3(1,0,0)
-		rotate_object_local(upDir, deg2rad(-mouseMovement.y))
+		
+		var distanceFromOrigo = Vector2(targetDir.x,  targetDir.z).length()
+
+		mouseMovement = ROTATESPEED * mouseMovement
+
+		#has to be restricted, so we dont jump over the top and get stuck there
+		mouseMovement.y = clamp(mouseMovement.y, -10.0, 10.0)
+
+		
+		#only allow y movement upwards or if not going too low
+		if ((targetDir.y < -4 || -mouseMovement.y < 0)
+			and (distanceFromOrigo > 4.0 || -mouseMovement.y > 0)): 
+			rotate_object_local(upDir, deg2rad(-mouseMovement.y))
 		var newDir = -get_global_transform().basis.z
 		translate_object_local(Vector3(0.0, 0.0, distance)) # tzoom out
 	else: #this happens when mouse is moved without pressing the middle mouse button
