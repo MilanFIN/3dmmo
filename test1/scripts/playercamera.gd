@@ -8,6 +8,7 @@ const MOVEPLANESIZE = 1
 
 
 
+
 var previousMouseLocation = Vector2(0, 0)
 var mouseLocation = Vector2(0,0)
 var mouseMoved = false
@@ -60,7 +61,6 @@ func _physics_process(delta):
 		# after last movement
 		mouseInitialized = false
 
-
 	if (zoomDirection == "forward"):
 		if (abs(node.translation.x - translation.x) + abs(node.translation.y - translation.y) + abs(node.translation.z - translation.z) > MINDIST):
 			var dir = -get_global_transform().basis.z
@@ -77,7 +77,19 @@ func _physics_process(delta):
 	orthonormalize() # repair precision errors
 
 
+	var hintBox = get_tree().get_root().get_node("gamecontroller/level/HUD/Hint")
 	
+	var mousePos = get_viewport().get_mouse_position()
+	var textProperties = getHint(mousePos)
+	#offset to be readable from under the cursor
+	mousePos.x += 10
+	mousePos.y += 10
+	hintBox.rect_position = mousePos
+
+	hintBox.text = textProperties[0]
+	if (textProperties[1] == "action"):
+		hintBox.set("custom_colors/font_color", Color(1,1,0))
+
 
 func _input(event):
    # Mouse in viewport coordinates
@@ -152,6 +164,44 @@ func _input(event):
 				var up = Vector3(0,1,0)
 				position3D = -position3D
 				get_parent().moveTo(position3D)
+
+
+func getHint(mousePosition):
+	var hint = ""
+	var hintType = ""
+	var point1 = Vector3(-MOVEPLANESIZE,0,-MOVEPLANESIZE)
+	var point2 = Vector3(-MOVEPLANESIZE,0,MOVEPLANESIZE)
+	var point3 = Vector3(MOVEPLANESIZE,0,-MOVEPLANESIZE)
+	var dropPlane = Plane(point1, point2, point3)
+	var position3D = dropPlane.intersects_ray(project_ray_origin(mousePosition),project_ray_normal(mousePosition))
+	if (position3D != null):
+		var setHint = false
+		var mapRoot = get_tree().get_root().get_node("gamecontroller/level/StaticMap")
+		for i in mapRoot.get_children():
+			var collShape = i.get_node("./CollisionShape")
+			var radius = collShape.shape.radius
+			if((i.translation - position3D).length() < radius):
+				var actionType = i.action()
+				var actionTarget = i.name
+				if (actionType != "none"):
+					hint = actionType
+					hintType = "action"
+					setHint = true
+					break
+		if (not setHint):
+			var dynamicRoot = get_tree().get_root().get_node("gamecontroller/level/DynamicMap")
+			for i in dynamicRoot.get_children():
+				var radius = i.getRadius()
+				if ((i.translation - position3D).length()  < radius):
+					var actionType = i.action()
+					var actionTarget = i.name
+
+					if (actionType != "none"):
+						hint = actionType
+						hintType = "action"
+						setHint = true
+						break
+	return [hint, hintType]
 
 
 func disableClick():
