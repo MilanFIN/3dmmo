@@ -27,7 +27,7 @@ var laserMaterial = SpatialMaterial.new()
 
 var mapRadius = 200
 
-var blockedTiles = []
+var blockedTiles = {}
 var allowedTiles = []
 var allowedTileIds = {}
 var allowedTilePositions = {}
@@ -230,7 +230,7 @@ func showDamage(damageList):
 
 func bakeNavMesh():
 	#startshere
-	blockedTiles = []
+	blockedTiles = {}
 	allowedTiles = []
 	allowedTileIds = {}
 	allowedTilePositions = {}
@@ -241,8 +241,8 @@ func bakeNavMesh():
 		#blockedTiles.append(Vector3(i.translation.x,0, i.translation.z))
 		for x in range(-radius, radius):
 			for y in range(-radius, radius):
-				blockedTiles.append(Vector3(i.translation.x+x,0, i.translation.z+y))
-	
+				#blockedTiles.append(Vector3(i.translation.x+x,0, i.translation.z+y))
+				blockedTiles[Vector3(i.translation.x+x,0, i.translation.z+y)] = 1
 	#print(blockedTiles)
 
 
