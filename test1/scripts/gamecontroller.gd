@@ -187,7 +187,8 @@ func handleMessage(message):
 						for object in relevant.keys():
 							#add objects that don't yet exist
 							if (not object in existingNames):
-								var dynamicobject = load("res://assets/dynamicobjects/pirate1.tscn")
+
+								var dynamicobject = load("res://assets/dynamicobjects/"+relevant[object]["type"]+".tscn")
 								var object_instance = dynamicobject.instance()
 								object_instance.set_name(object)
 								dynamicRoot.add_child(object_instance)
