@@ -142,6 +142,11 @@ class GameLogic():
 						player.setDoneAction("dynamic", player.nextActionType, player.nextActionTargetId)
 						player.setAttackTarget(player.nextActionTargetId, "dynamic")
 						player.clearNextAction()
+					elif (player.nextActionType == "speak"):
+						player.speak("0")
+						player.resetActionTime()
+						player.setDoneAction("dynamic", player.nextActionType, player.nextActionTargetId)
+						player.clearNextAction()
 
 
 
@@ -214,6 +219,9 @@ class GameLogic():
 			playerState["hp"]["maxhp"] = player.getMaxHp()
 
 			playerState["dmghist"] = player.damageHistory
+
+			playerState["speaking"] = player.speaking
+			playerState["conv"] = player.getConversation()
 
 			"""
 			print(player.hp)

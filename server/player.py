@@ -1,6 +1,7 @@
 
 import time
 from inventory import *
+from conversation import *
 
 class Player():
 	def __init__(self, username):
@@ -41,6 +42,9 @@ class Player():
 
 
 		self.damageHistory = []
+
+		self.speaking = False
+		self.conversation = None
 
 	def getMapId(self):
 		return self.map
@@ -138,11 +142,23 @@ class Player():
 		pass
 		self.hp -= damage
 		if (self.hp <= 0):
-			print("we died")
 			self.respawn()
 			return False
 		if (damage != 0):
 			self.damageHistory.append(str(damage))
-
 		else:
 			return True
+	
+	def speak(self, conversationId):
+		self.speaking = True
+		self.conversation = Conversation(conversationId)
+
+	def getConversation(self):
+		if (not self.speaking):
+			return ""
+		else:
+			return self.conversation.getMessage()
+
+	def stopSpeaking(self):
+		self.speaking = True
+		self.conversation = None

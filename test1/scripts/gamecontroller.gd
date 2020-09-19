@@ -173,8 +173,10 @@ func handleMessage(message):
 								player.setHp(hpDict["hp"], hpDict["maxhp"])
 						if ("dmghist" in playerData):
 							player.showDamage(playerData["dmghist"]);
-	
-
+						if ("speaking" in playerData and "conv" in playerData):
+							if (playerData["speaking"]):
+								if (playerData["conv"] != ""):
+									print(playerData["conv"])
 					
 					#handle npc's etc
 					if ("dynamicdata" in message["data"]):
