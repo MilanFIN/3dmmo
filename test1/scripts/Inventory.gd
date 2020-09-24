@@ -43,3 +43,17 @@ func setItems(items):
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+
+
+
+
+
+func _on_Inventory_mouse_entered():
+	get_tree().get_root().get_node("gamecontroller/level/playership/Camera").disableClick()
+	pass # Replace with function body.
+
+
+func _on_Inventory_mouse_exited():
+	get_tree().get_root().get_node("gamecontroller/level/playership/Camera").enableClick()
+	pass # Replace with function body.
+

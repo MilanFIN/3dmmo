@@ -72,6 +72,8 @@ class Player():
 		self.state = state
 		self.overrideState = True
 
+	def setState(self, state):
+		self.state = state
 
 	def hasNextAction(self):
 		if (self.nextActionTargetId != "" and self.nextActionType != "" and self.nextActionObjectType != ""):
@@ -160,5 +162,5 @@ class Player():
 			return self.conversation.getMessage()
 
 	def stopSpeaking(self):
-		self.speaking = True
+		self.speaking = False
 		self.conversation = None

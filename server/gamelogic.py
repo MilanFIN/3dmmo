@@ -66,7 +66,7 @@ class GameLogic():
 					if (msg["action"] == "idle" and "x" in msg and "y" in msg):
 						player.x = float(msg["x"])
 						player.y = float(msg["y"])
-						player.state = "idle"
+						player.setState("idle")
 					elif (msg["action"] == "moving" and "x" in msg and "y" in msg and "targetx" in msg and "targety" in msg):
 						if (player.targetX != msg["targetx"] or player.targetY != msg["targety"]):
 							player.clearNextAction()
@@ -74,7 +74,7 @@ class GameLogic():
 						player.y = float(msg["y"])
 						player.targetX = msg["targetx"]
 						player.targetY = msg["targety"]
-						player.state = "moving"
+						player.setState("moving")
 
 				#SET NEXT ACTIONS TO PLAYERS
 				if ("acttarget" in msg and "actobject" in msg and "acttype" in msg):
