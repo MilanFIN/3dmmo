@@ -95,8 +95,8 @@ func sendState():
 		status["acttarget"] = player.nextActionTarget
 		status["actobject"] = player.nextActionObjectType
 		status["acttype"] = player.nextActionType
-	
-	
+		player.clearNextAction()
+
 	ws.get_peer(1).put_packet(JSON.print(status).to_utf8())
 	
 	# MESSAGE THAT THE PLAYER HAS SENT

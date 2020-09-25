@@ -16,9 +16,21 @@ func _ready():
 #	pass
 
 
+func setVisible(visibility):
+	visible = visibility
+	if (visibility == false):
+		_on_ConversationBox_mouse_exited()
+
+
+
 func _on_ConversationBox_mouse_entered():
 	get_tree().get_root().get_node("gamecontroller/level/playership/Camera").disableClick()
 
 
 func _on_ConversationBox_mouse_exited():
 	get_tree().get_root().get_node("gamecontroller/level/playership/Camera").enableClick()
+
+
+func _on_NextButton_pressed():
+	var player = get_tree().get_root().get_node("gamecontroller/level/playership")
+	player.setNextAction("conversation", "next", "none")

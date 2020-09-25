@@ -116,6 +116,7 @@ func _input(event):
 		var dir = get_global_transform().basis.z
 		zoomDirection = "back"
 	if (event.is_action_pressed("ui_mouseleft")):
+		print(canClick)
 		if (canClick):
 			var position2D = get_viewport().get_mouse_position()
 			var point1 = Vector3(-MOVEPLANESIZE,0,-MOVEPLANESIZE)

@@ -98,7 +98,10 @@ class GameLogic():
 								timeDiff = time.time() - player.getLastActionTime()
 								if (timeDiff > 1):
 									player.setNextAction("dynamic", target.action, targetId)
-
+					elif (msg["actobject"] == "conversation"):
+							timeDiff = time.time() - player.getLastActionTime()
+							if (timeDiff > 1):
+								player.setNextAction("conversation", msg["acttype"], None)
 
 		self.gameMessages = {}	
 
@@ -147,6 +150,13 @@ class GameLogic():
 						player.resetActionTime()
 						player.setDoneAction("dynamic", player.nextActionType, player.nextActionTargetId)
 						player.clearNextAction()
+				elif (player.nextActionObjectType == "conversation"):
+					if (player.nextActionType == "next"):
+						player.resetActionTime()
+						player.setDoneAction("conversation", player.nextActionType, player.nextActionTargetId)
+						player.advanceConversation()
+						player.clearNextAction()
+
 
 
 

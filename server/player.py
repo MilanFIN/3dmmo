@@ -161,6 +161,12 @@ class Player():
 		else:
 			return self.conversation.getMessage()
 
+	def advanceConversation(self):
+		if (self.speaking):
+			#advance conv, if ended, stop conv
+			if (not (self.conversation.advance())):
+				self.stopSpeaking()
+
 	def stopSpeaking(self):
 		self.speaking = False
 		self.conversation = None

@@ -8,14 +8,19 @@ class Conversation():
 		self.messages = ["test", "test2"]
 		self.currentMessage = 0
 		self.newMessage = True
+		self.stillSpeaking = True
 	def getMessage(self):
 		if (self.newMessage):
 			self.newMessage = False
 			return self.messages[self.currentMessage]
 		else:
 			return ""
-	def advanceConversation(self):
+	def advance(self):
 		self.currentMessage += 1
+		self.newMessage = True
+
 		if (self.currentMessage >= len(self.messages)):
-			self.newMessage = True
-			self.currentMessage = len(self.messages) - 1
+			self.currentMessage = ""
+			self.stillSpeaking = False
+		return self.stillSpeaking
+

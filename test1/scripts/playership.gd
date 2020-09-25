@@ -188,6 +188,8 @@ func setNextAction(objtype, actiontype, target):
 	nextActionTarget = target
 	nextActionObjectType = objtype
 
+
+
 func clearNextAction():
 	nextActionType = ""
 	nextActionTarget = ""
