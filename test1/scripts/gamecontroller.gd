@@ -177,9 +177,9 @@ func handleMessage(message):
 							if (playerData["speaking"]):
 								if (playerData["conv"] != ""):
 									get_node("./level/HUD/ConversationBox/ConvText").text = playerData["conv"]
-								get_node("./level/HUD/ConversationBox").visible = true
+								get_node("./level/HUD/ConversationBox").setVisible(true)
 							else:
-								get_node("./level/HUD/ConversationBox").visible = false
+								get_node("./level/HUD/ConversationBox").setVisible(false)
 					
 					#handle npc's etc
 					if ("dynamicdata" in message["data"]):

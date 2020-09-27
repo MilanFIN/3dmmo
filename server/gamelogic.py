@@ -111,6 +111,7 @@ class GameLogic():
 			player = self.players[uid]
 			if (player.hasNextAction()):
 				if (player.nextActionObjectType == "static"):
+					player.stopSpeaking()
 
 					target = self.maps[player.getMapId()].getStaticObjectById(player.nextActionTargetId)
 					deltaX = abs(target.x - player.x)
@@ -135,17 +136,21 @@ class GameLogic():
 								player.forceState("idle")
 								player.clearNextAction()
 				elif (player.nextActionObjectType == "inventory"):
+					player.stopSpeaking()
+
 					if (player.nextActionType == "drop"):
 						player.setDoneAction("inventory", player.nextActionType, player.nextActionTargetId)
 						player.inventory.removeByIndex(int(player.nextActionTargetId))
 						player.clearNextAction()
 				elif (player.nextActionObjectType == "dynamic"):
+					player.stopSpeaking()
 					if (player.nextActionType == "attack"):
 						player.resetActionTime()
 						player.setDoneAction("dynamic", player.nextActionType, player.nextActionTargetId)
 						player.setAttackTarget(player.nextActionTargetId, "dynamic")
 						player.clearNextAction()
 					elif (player.nextActionType == "speak"):
+						player.stopSpeaking()
 						player.speak("0")
 						player.resetActionTime()
 						player.setDoneAction("dynamic", player.nextActionType, player.nextActionTargetId)
@@ -155,6 +160,11 @@ class GameLogic():
 						player.resetActionTime()
 						player.setDoneAction("conversation", player.nextActionType, player.nextActionTargetId)
 						player.advanceConversation()
+						player.clearNextAction()
+					if (player.nextActionType == "stop"):
+						player.resetActionTime()
+						player.setDoneAction("conversation", player.nextActionType, player.nextActionTargetId)
+						player.stopSpeaking()
 						player.clearNextAction()
 
 

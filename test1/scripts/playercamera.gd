@@ -159,6 +159,10 @@ func _input(event):
 				if (not nodeClicked):
 					get_parent().clearNextAction()
 					get_parent().clearCurrentAction()
+					if (get_tree().get_root().get_node("gamecontroller/level/HUD/ConversationBox").visible):
+						get_parent().setNextAction("conversation", "stop", "none")
+
+				#get_tree().get_root().get_node("gamecontroller/level/HUD/ConversationBox").setVisible(false)
 
 
 					
