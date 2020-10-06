@@ -107,6 +107,9 @@ class DynamicObject(GameObject):
 			self.respawnDelay = int(data["respawn"])
 			self.damageHistory = []
 
+		if (self.action == "speak"):
+			self.conversation = data["conversation"]
+
 		self.data = {}
 		self.data["x"] = self.x
 		self.data["y"] = self.y

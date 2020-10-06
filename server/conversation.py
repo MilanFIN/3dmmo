@@ -1,11 +1,18 @@
-import configparser
 from gameobject import *
-import json
 
 
 class Conversation():
-	def __init__(self, id):
-		self.messages = ["test", "test2"]
+	def __init__(self, id, playerName, opponent):
+
+		filename = "./conversations/" + str(id) + ".cfg"
+		self.unparsedMessages = []
+		self.messages = []
+		with open(filename) as f:
+			self.unparsedMessages = f.readlines() 
+		for m in self.unparsedMessages:
+			parsedMessage = m.replace("{player}", playerName)
+			parsedMessage = parsedMessage.replace("{opponent}", opponent)
+			self.messages.append(parsedMessage)
 		self.currentMessage = 0
 		self.newMessage = True
 		self.stillSpeaking = True

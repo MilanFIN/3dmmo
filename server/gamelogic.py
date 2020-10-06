@@ -151,7 +151,8 @@ class GameLogic():
 						player.clearNextAction()
 					elif (player.nextActionType == "speak"):
 						player.stopSpeaking()
-						player.speak("0")
+						conversationTarget = self.maps[player.getMapId()].getDynamicObjectById(player.nextActionTargetId)
+						player.speak(conversationTarget.conversation, conversationTarget.name)
 						player.resetActionTime()
 						player.setDoneAction("dynamic", player.nextActionType, player.nextActionTargetId)
 						player.clearNextAction()

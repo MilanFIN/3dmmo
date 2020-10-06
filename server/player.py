@@ -151,9 +151,9 @@ class Player():
 		else:
 			return True
 	
-	def speak(self, conversationId):
+	def speak(self, conversationId, opponentName):
 		self.speaking = True
-		self.conversation = Conversation(conversationId)
+		self.conversation = Conversation(conversationId, self.username, opponentName)
 
 	def getConversation(self):
 		if (not self.speaking):
