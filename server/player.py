@@ -2,6 +2,8 @@
 import time
 from inventory import *
 from conversation import *
+from quests import QuestApi
+
 
 class Player():
 	def __init__(self, username):
@@ -45,6 +47,9 @@ class Player():
 
 		self.speaking = False
 		self.conversation = None
+
+
+		self.questApi = QuestApi()
 
 	def getMapId(self):
 		return self.map
